@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Học Tiếng Việt với Mỡ! 🤖 🔊</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #FFF9F0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+      padding: 20px;
+      flex-direction: column;
+    }
+    .screen.active { display: flex; }
+
+    /* ── Header ── */
+    .header {
+      background: #DA251D;
+      color: white;
+      padding: 14px 18px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .header h1 { font-size: 26px; font-weight: 900; }
+    .back-btn {
+      background: rgba(255,255,255,0.25);
+      border: none;
+      color: white;
+      font-size: 24px;
+      padding: 7px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    /* ── Main Menu ── */
+    #screen-menu {
+      background: linear-gradient(160deg, #DA251D 0%, #C0392B 40%, #8B0000 100%);
+      align-items: center;
+    }
+
+    .menu-title {
+      text-align: center;
+      color: #FFCD00;
+      font-size: 40px;
+      font-weight: 900;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+      margin-top: 10px;
+    }
+    .menu-subtitle {
+      text-align: center;
+      color: #fff;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    /* ── Pronunciation Info ── */
+    .pronounce-info {
+      background: rgba(255,255,255,0.15);
+      border: 2px solid #FFCD00;
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+    .pronounce-info p {
+      color: #fff;
+      font-size: 16px;
+      margin: 4px 0;
+    }
+    .pronounce-info .emoji { font-size: 24px; margin-right: 8px; }
+    .pronounce-info .highlight { color: #FFCD00; font-weight: 900; }
+
+    /* ── Roomba mascot (CSS-drawn) ── */
+    .roomba-mascot {
+      width: 110px;
+      height: 110px;
+      background: radial-gradient(circle at 40% 35%, #555, #222);
+      border-radius: 50%;
+      position: relative;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 -4px 8px rgba(0,0,0,0.4);
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+    .roomba-mascot .sensor-bar {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 64px;
+      height: 9px;
+      background: #444;
+      border-radius: 5px;
+    }
+    .roomba-eyes {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+    }
+    .roomba-eye {
+      width: 18px;
+      height: 18px;
+      background: #00FF88;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00FF88, 0 0 20px rgba(0,255,136,0.4);
+      animation: blink 4s infinite;
+    }
+    @keyframes blink {
+      0%, 94%, 100% { transform: scaleY(1); }
+      96% { transform: scaleY(0.08); }
+    }
+    .roomba-mascot .bottom-bar {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 7px;
+      background: #444;
+      border-radius: 4px;
+    }
+
+    /* ── Stars display ── */
+    .stars-display {
+      text-align: center;
+      font-size: 22px;
+      color: #FFCD00;
+      letter-spacing: 4px;
+      margin-bottom: 22px;
+      min-height: 32px;
+    }
+
+    /* ── Menu grid ── */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .menu-btn {
+      background: #FFCD00;
+      border: none;
+      border-radius: 22px;
+      padding: 20px 14px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 900;
+      color: #7B1C1C;
+      text-align: center;
+      box-shadow: 0 7px 0 #C8A000, 0 9px 18px rgba(0,0,0,0.25);
+      transition: transform 0.1s, box-shadow 0.1s;
+      line-height: 1.4;
+    }
+    .menu-btn:active {
+      transform: translateY(5px);
+      box-shadow: 0 2px 0 #C8A000, 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .menu-btn .btn-emoji { font-size: 38px; display: block; margin-bottom: 6px; }
+    .menu-btn.full-width { grid-column: 1 / -1; }
+
+    /* ── Game screens base ── */
+    .game-screen { background: #FFF9F0; }
+
+    /* ─────────────────────────────────────────
+       FLASHCARDS
+    ───────────────────────────────────────── */
+    .cat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .cat-tab {
+      background: #eee;
+      border: 3px solid #ddd;
+      border-radius: 30px;
+      padding: 8px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #555;
+    }
+    .cat-tab.active {
+      background: #DA251D;
+      border-color: #DA251D;
+      color: #fff;
+    }
+
+    .fc-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+    }
+    .flashcard {
+      width: min(320px, 90vw);
+      height: 210px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.45s ease;
+    }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+    }
+    .card-front {
+      background: #fff;
+      border: 4px solid #FFCD00;
+    }
+    .card-back {
+      background: #DA251D;
+      border: 4px solid #AA1010;
+      transform: rotateY(180deg);
+    }
+    .card-emoji  { font-size: 62px; }
+    .card-english{ font-size: 28px; font-weight: 900; color: #333; }
+    .card-viet   { font-size: 30px; font-weight: 900; color: #fff; cursor: pointer; }
+    .card-viet:hover { text-decoration: underline; }
+    .card-hint   { font-size: 13px; color: #aaa; }
+    .card-hint-b { font-size: 13px; color: rgba(255,255,255,0.65); }
+
+    /* Speak button on Vietnamese side */
+    .speak-btn {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid #FFCD00;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #FFCD00;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .speak-btn:hover, .speak-btn:active {
+      background: rgba(255,255,255,0.4);
+    }
+
+    .card-nav {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+    .nav-btn {
+      background: #FFCD00;
+      border: none;
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #C8A000;
+    }
+    .nav-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #C8A000; }
+    .card-counter { font-size: 20px; font-weight: 800; color: #666; }
+
+    /* ─────────────────────────────────────────
+       WORD MATCH
+    ───────────────────────────────────────── */
+    .match-score {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 900;
+      color: #DA251D;
+      margin-bottom: 14px;
+    }
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .match-col { display: flex; flex-direction: column; gap: 10px; }
+    .match-btn {
+      background: #fff;
+      border: 4px solid #FFCD00;
+      border-radius: 18px;
+      padding: 16px 10px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      color: #333;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+      transition: background .15s, border-color .15s;
+    }
+    .match-btn.selected { background: #FFCD00; border-color: #DA251D; color: #7B1C1C; }
+    .match-btn.matched  { background: #4CAF50; border-color: #388E3C; color: #fff; cursor: default; }
+    .match-btn.wrong    { background: #F44336; border-color: #C62828; color: #fff; }
+
+    .next-btn {
+      display: block;
+      margin: 20px auto 0;
+      background: #DA251D;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 16px 38px;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #8B0000;
+    }
+    .next-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #8B0000; }
+
+    /* ─────────────────────────────────────────
+       FILL IN THE BLANK
+    ───────────────────────────────────────── */
+    .fitb-progress {
+      text-align: center;
+      font-size: 18px;
+      color: #999;
+      margin-bottom: 6px;
+    }
+    .fitb-score {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #DA251D;
+      margin-bottom: 14px;
+    }
+    .fitb-question {
+      background: #fff;
+      border: 4px solid #FFCD00;
+      border-radius: 24px;
+      padding: 28px 22px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 900;
+      color: #333;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+    .fitb-translation {
+      text-align: center;
+      font-size: 17px;
+      color: #888;
+      margin-bottom: 22px;
+      font-style: italic;
+    }
+    .fitb-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .fitb-btn {
+      background: #fff;
+      border: 4px solid #FFCD00;
+      border-radius: 18px;
+      padding: 18px 10px;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #333;
+      box-shadow: 0 5px 0 #C8A000;
+      transition: transform .1s;
+    }
+    .fitb-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #C8A000; }
+    .fitb-btn.correct { background: #4CAF50; border-color: #388E3C; color: #fff; }
+    .fitb-btn.wrong   { background: #F44336; border-color: #C62828; color: #fff; }
+
+    /* ─────────────────────────────────────────
+       TONE EXPLORER
+    ───────────────────────────────────────── */
+    .tone-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .tone-card {
+      background: #fff;
+      border: 4px solid #5D8A3C;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+    .tone-card:hover, .tone-card:active {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    .tone-card.playing {
+      background: #E8F5E8;
+      border-color: #4CAF50;
+    }
+    .tone-syllable {
+      font-size: 42px;
+      font-weight: 900;
+      color: #DA251D;
+      margin-bottom: 8px;
+    }
+    .tone-mark-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #5D8A3C;
+      margin-bottom: 8px;
+    }
+    .tone-emoji {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    .tone-meaning {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .tone-desc {
+      font-size: 14px;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+    .tone-play-hint {
+      font-size: 13px;
+      color: #5D8A3C;
+      font-weight: 600;
+    }
+
+    /* ─────────────────────────────────────────
+       ROOMBA SAYS
+    ───────────────────────────────────────── */
+    .roomba-scores {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 10px;
+    }
+    .roomba-score  { font-size: 22px; font-weight: 900; color: #DA251D; }
+    .roomba-streak { font-size: 22px; font-weight: 900; color: #FF8C00; }
+
+    .roomba-big {
+      width: 130px;
+      height: 130px;
+      background: radial-gradient(circle at 40% 35%, #555, #111);
+      border-radius: 50%;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 -5px 10px rgba(0,0,0,0.5);
+      margin: 0 auto 14px;
+      flex-shrink: 0;
+    }
+    .roomba-big .sensor-bar {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 76px;
+      height: 10px;
+      background: #444;
+      border-radius: 5px;
+    }
+    .roomba-big-eyes {
+      position: absolute;
+      top: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+    }
+    .roomba-big-eye {
+      width: 22px;
+      height: 22px;
+      background: #00FF88;
+      border-radius: 50%;
+      box-shadow: 0 0 14px #00FF88, 0 0 28px rgba(0,255,136,0.4);
+      animation: blink 4s infinite;
+    }
+    .roomba-big .bottom-bar {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38px;
+      height: 8px;
+      background: #444;
+      border-radius: 4px;
+    }
+
+    .roomba-bubble {
+      background: #fff;
+      border: 4px solid #DA251D;
+      border-radius: 22px;
+      padding: 18px 24px;
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .roomba-bubble::after {
+      content: '';
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 11px solid transparent;
+      border-bottom-color: #DA251D;
+    }
+    .roomba-bubble::before {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 9px solid transparent;
+      border-bottom-color: #fff;
+      z-index: 1;
+    }
+    .roomba-cmd-vi { font-size: 32px; font-weight: 900; color: #DA251D; cursor: pointer; }
+    .roomba-cmd-vi:hover { text-decoration: underline; }
+    .roomba-cmd-en { font-size: 17px; color: #888; font-weight: 600; margin-top: 4px; }
+
+    .roomba-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .action-btn {
+      background: #fff;
+      border: 4px solid #FFCD00;
+      border-radius: 22px;
+      padding: 16px 10px;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 5px 0 #C8A000;
+      transition: transform .1s;
+    }
+    .action-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #C8A000; }
+    .action-btn.correct { background: #4CAF50; border-color: #388E3C; }
+    .action-btn.wrong   { background: #F44336; border-color: #C62828; }
+    .action-emoji { font-size: 46px; display: block; }
+    .action-label { font-size: 15px; font-weight: 900; color: #333; margin-top: 5px; display: block; }
+    .action-btn.correct .action-label,
+    .action-btn.wrong   .action-label { color: #fff; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: #FFCD00;
+      color: #7B1C1C;
+      font-size: 26px;
+      font-weight: 900;
+      padding: 24px 36px;
+      border-radius: 28px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+      z-index: 9999;
+      text-align: center;
+      pointer-events: none;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      line-height: 1.4;
+    }
+    .toast.show { transform: translate(-50%, -50%) scale(1); }
+
+    /* ── Responsive ── */
+    @media (max-width: 400px) {
+      .menu-grid { grid-template-columns: 1fr; }
+      .flashcard { height: 190px; }
+      .card-emoji { font-size: 52px; }
+      .card-english, .card-viet { font-size: 24px; }
+      .tone-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════════════
+     MAIN MENU
+════════════════════════════════════════ -->
+<div class="screen active" id="screen-menu">
+  <div class="menu-title">Học Tiếng Việt! 🇻🇳</div>
+  <div class="menu-subtitle">Xin chào, Mỡ! 👋</div>
+
+  <div class="pronounce-info">
+    <p><span class="emoji">🔊</span> <span class="highlight">NEW:</span> Tap any Vietnamese word to hear it!</p>
+    <p><span class="emoji">🎵</span> Learn Vietnamese tones with Tone Explorer!</p>
+  </div>
+
+  <div class="roomba-mascot">
+    <div class="sensor-bar"></div>
+    <div class="roomba-eyes">
+      <div class="roomba-eye"></div>
+      <div class="roomba-eye" style="animation-delay:.4s"></div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+
+  <div class="stars-display" id="menu-stars">⭐⭐⭐⭐⭐</div>
+
+  <div class="menu-grid">
+    <button class="menu-btn" onclick="startFlashcards()">
+      <span class="btn-emoji">🃏</span>
+      Flashcards
+    </button>
+    <button class="menu-btn" onclick="startWordMatch()">
+      <span class="btn-emoji">🔤</span>
+      Word Match
+    </button>
+    <button class="menu-btn" onclick="startFillBlank()">
+      <span class="btn-emoji">✏️</span>
+      Fill the Blank
+    </button>
+    <button class="menu-btn" onclick="startToneExplorer()">
+      <span class="btn-emoji">🎵</span>
+      Tone Explorer
+    </button>
+    <button class="menu-btn" onclick="startRoombaSays()">
+      <span class="btn-emoji">🤖</span>
+      Roomba Says!
+    </button>
+    <button class="menu-btn full-width" onclick="showVoiceInfo()">
+      <span class="btn-emoji">🔊</span>
+      Pronunciation Help
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     FLASHCARDS
+════════════════════════════════════════ -->
+<div class="screen game-screen" id="screen-flashcards">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h1>🃏 Flashcards</h1>
+  </div>
+
+  <div class="cat-tabs" id="cat-tabs"></div>
+
+  <div class="fc-wrap">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-inner">
+        <div class="card-face card-front">
+          <span class="card-emoji" id="fc-emoji">🐕</span>
+          <span class="card-english" id="fc-en">Dog</span>
+          <span class="card-hint">Tap to see Vietnamese! 👆</span>
+        </div>
+        <div class="card-face card-back">
+          <span class="card-emoji" id="fc-emoji-b">🐕</span>
+          <span class="card-viet" id="fc-vi" onclick="speakCurrentCard()">con chó</span>
+          <button class="speak-btn" onclick="speakCurrentCard()">🔊</button>
+          <span class="card-hint-b">Tap word to hear it! 👆</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-nav">
+      <button class="nav-btn" onclick="prevCard()">◀</button>
+      <span class="card-counter" id="fc-counter">1 / 10</span>
+      <button class="nav-btn" onclick="nextCard()">▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     WORD MATCH
+════════════════════════════════════════ -->
+<div class="screen game-screen" id="screen-match">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h1>🔤 Word Match</h1>
+  </div>
+
+  <div class="match-score" id="match-score">Matched: 0 / 6</div>
+
+  <div class="match-grid">
+    <div class="match-col" id="match-left"></div>
+    <div class="match-col" id="match-right"></div>
+  </div>
+
+  <button class="next-btn" id="match-next" onclick="startWordMatch()" style="display:none">
+    🔄 New Round!
+  </button>
+</div>
+
+<!-- ════════════════════════════════════════
+     FILL IN THE BLANK
+════════════════════════════════════════ -->
+<div class="screen game-screen" id="screen-fitb">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h1>✏️ Fill the Blank</h1>
+  </div>
+
+  <div class="fitb-progress" id="fitb-progress">Question 1 / 10</div>
+  <div class="fitb-score"    id="fitb-score">⭐ Score: 0</div>
+  <div class="fitb-question" id="fitb-question">Loading...</div>
+  <div class="fitb-translation" id="fitb-translation"></div>
+  <div class="fitb-options"  id="fitb-options"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     TONE EXPLORER
+════════════════════════════════════════ -->
+<div class="screen game-screen" id="screen-tone">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h1>🎵 Tone Explorer</h1>
+  </div>
+
+  <p style="text-align:center; color:#666; margin:10px 20px; font-size:16px;">
+    Vietnamese has 6 tones. Tap each card to hear the tone and see its pitch contour!
+  </p>
+
+  <div class="tone-grid" id="tone-grid"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ROOMBA SAYS
+════════════════════════════════════════ -->
+<div class="screen game-screen" id="screen-roomba">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h1>🤖 Roomba Says!</h1>
+  </div>
+
+  <div class="roomba-scores">
+    <div class="roomba-score"  id="roomba-score">⭐ 0</div>
+    <div class="roomba-streak" id="roomba-streak">🔥 0</div>
+  </div>
+
+  <div class="roomba-big">
+    <div class="sensor-bar"></div>
+    <div class="roomba-big-eyes">
+      <div class="roomba-big-eye"></div>
+      <div class="roomba-big-eye" style="animation-delay:.5s"></div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+
+  <div class="roomba-bubble">
+    <div class="roomba-cmd-vi" id="roomba-cmd-vi" onclick="speakRoombaCommand()">Đứng lên!</div>
+    <div class="roomba-cmd-en" id="roomba-cmd-en">Stand up!</div>
+  </div>
+
+  <div class="roomba-action-grid" id="roomba-actions"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     VOICE INFO
+════════════════════════════════════════ -->
+<div class="screen game-screen" id="screen-voice">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h1>🔊 Pronunciation Help</h1>
+  </div>
+
+  <div style="padding:20px; max-width:600px; margin:0 auto;">
+    <h2 style="color:#DA251D; margin-bottom:16px;">How Pronunciation Works</h2>
+    
+    <div style="background:#f0f8ff; border-radius:16px; padding:20px; margin-bottom:20px;">
+      <h3 style="color:#5D8A3C; margin-bottom:10px;">🎯 Tap to Hear</h3>
+      <p>Tap any <strong>Vietnamese word</strong> in the app to hear it pronounced!</p>
+      <p>Look for the 🔊 button or underlined Vietnamese text.</p>
+    </div>
+
+    <div style="background:#fff8f0; border-radius:16px; padding:20px; margin-bottom:20px;">
+      <h3 style="color:#DA251D; margin-bottom:10px;">🔧 Voice Setup</h3>
+      <p>The app uses your device's built-in text-to-speech voices.</p>
+      <p><strong>If Vietnamese doesn't sound right:</strong></p>
+      <ul style="margin-left:20px; margin-top:10px;">
+        <li>Your device might need Vietnamese language pack</li>
+        <li>Try installing Vietnamese TTS voice in system settings</li>
+        <li>On iPhone/iPad: Settings → Accessibility → Spoken Content → Voices</li>
+        <li>On Android: Settings → Language & input → Text-to-speech</li>
+      </ul>
+    </div>
+
+    <div style="background:#f0fff0; border-radius:16px; padding:20px; margin-bottom:20px;">
+      <h3 style="color:#4CAF50; margin-bottom:10px;">🎵 Tone Explorer</h3>
+      <p>Vietnamese has 6 tones that change word meaning:</p>
+      <p style="font-family:monospace; font-size:18px; margin:10px 0;">
+        ma (ghost) · mà (but) · má (mom) · mả (grave) · mã (horse) · mạ (rice seedling)
+      </p>
+      <p>Each tone has a different pitch pattern. Tap cards in Tone Explorer to hear them!</p>
+    </div>
+
+    <button onclick="checkVoices()" style="background:#5D8A3C; color:white; border:none; border-radius:12px; padding:12px 24px; font-size:16px; font-weight:bold; cursor:pointer; display:block; margin:20px auto;">
+      🔍 Check Available Voices
+    </button>
+
+    <div id="voice-check-result" style="background:#eee; border-radius:12px; padding:16px; margin-top:20px; font-family:monospace; font-size:12px; display:none;"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const VOCAB = {
+  animals: [
+    { en: 'Dog',          vi: 'con chó',       emoji: '🐕' },
+    { en: 'Cat',          vi: 'con mèo',       emoji: '🐱' },
+    { en: 'Chicken',      vi: 'con gà',        emoji: '🐓' },
+    { en: 'Duck',         vi: 'con vịt',       emoji: '🦆' },
+    { en: 'Fish',         vi: 'con cá',        emoji: '🐟' },
+    { en: 'Pig',          vi: 'con heo',       emoji: '🐷' },
+    { en: 'Corgi',        vi: 'chó corgi',     emoji: '🐕‍🦺' },
+    { en: 'Bird',         vi: 'con chim',      emoji: '🐦' },
+    { en: 'Frog',         vi: 'con ếch',       emoji: '🐸' },
+    { en: 'Rabbit',       vi: 'con thỏ',       emoji: '🐰' },
+  ],
+  family: [
+    { en: 'Dad',          vi: 'ba / bố',       emoji: '👨' },
+    { en: 'Mom',          vi: 'mẹ',            emoji: '👩' },
+    { en: 'Older Brother',vi: 'anh',           emoji: '👦' },
+    { en: 'Older Sister', vi: 'chị',           emoji: '👧' },
+    { en: 'Younger Sibling',vi:'em',           emoji: '🧒' },
+    { en: 'Grandpa',      vi: 'ông',           emoji: '👴' },
+    { en: 'Grandma',      vi: 'bà',            emoji: '👵' },
+    { en: 'Aunt (young)', vi: 'cô',            emoji: '👩' },
+    { en: 'Uncle',        vi: 'chú',           emoji: '👨' },
+  ],
+  food: [
+    { en: 'Rice',         vi: 'cơm',           emoji: '🍚' },
+    { en: 'Pho',          vi: 'phở',           emoji: '🍜' },
+    { en: 'Bread',        vi: 'bánh mì',       emoji: '🥖' },
+    { en: 'Water',        vi: 'nước',          emoji: '💧' },
+    { en: 'Banana',       vi: 'chuối',         emoji: '🍌' },
+    { en: 'Apple',        vi: 'táo',           emoji: '🍎' },
+    { en: 'Egg',          vi: 'trứng',         emoji: '🥚' },
+    { en: 'Milk',         vi: 'sữa',           emoji: '🥛' },
+  ],
+  numbers: [
+    { en: 'One (1)',      vi: 'một',           emoji: '1️⃣' },
+    { en: 'Two (2)',      vi: 'hai',           emoji: '2️⃣' },
+    { en: 'Three (3)',    vi: 'ba',            emoji: '3️⃣' },
+    { en: 'Four (4)',     vi: 'bốn',           emoji: '4️⃣' },
+    { en: 'Five (5)',     vi: 'năm',           emoji: '5️⃣' },
+    { en: 'Six (6)',      vi: 'sáu',           emoji: '6️⃣' },
+    { en: 'Seven (7)',    vi: 'bảy',           emoji: '7️⃣' },
+    { en: 'Eight (8)',    vi: 'tám',           emoji: '8️⃣' },
+    { en: 'Nine (9)',     vi: 'chín',          emoji: '9️⃣' },
+    { en: 'Ten (10)',     vi: 'mười',          emoji: '🔟' },
+  ],
+  colors: [
+    { en: 'Red',          vi: 'đỏ',            emoji: '🔴' },
+    { en: 'Blue',         vi: 'xanh dương',    emoji: '🔵' },
+    { en: 'Green',        vi: 'xanh lá',       emoji: '🟢' },
+    { en: 'Yellow',       vi: 'vàng',          emoji: '🟡' },
+    { en: 'White',        vi: 'trắng',         emoji: '⚪' },
+    { en: 'Black',        vi: 'đen',           emoji: '⚫' },
+    { en: 'Orange',       vi: 'cam',           emoji: '🟠' },
+    { en: 'Pink',         vi: 'hồng',          emoji: '🩷' },
+    { en: 'Purple',       vi: 'tím',           emoji: '🟣' },
+  ],
+  everyday: [
+    { en: 'Hello',        vi: 'xin chào',      emoji: '👋' },
+    { en: 'Thank you',    vi: 'cảm ơn',        emoji: '🙏' },
+    { en: 'Yes',          vi: 'vâng / có',     emoji: '✅' },
+    { en: 'No',           vi: 'không',         emoji: '❌' },
+    { en: 'I / Me',       vi: 'tôi',           emoji: '🙋' },
+    { en: 'You',          vi: 'bạn',           emoji: '👉' },
+    { en: 'Good',         vi: 'tốt',           emoji: '👍' },
+    { en: 'Eat',          vi: 'ăn',            emoji: '😋' },
+    { en: 'Sleep',        vi: 'ngủ',           emoji: '😴' },
+    { en: 'Play',         vi: 'chơi',          emoji: '🎮' },
+    { en: 'Roomba',       vi: 'rô-bốt lau nhà',emoji:'🤖' },
+    { en: 'Train',        vi: 'tàu hỏa',       emoji: '🚂' },
+    { en: 'Please',       vi: 'xin',           emoji: '🤝' },
+  ],
+};
+
+const CAT_LABELS = {
+  animals: '🐾 Animals',
+  family:  '👨‍👩‍👧 Family',
+  food:    '🍚 Food',
+  numbers: '🔢 Numbers',
+  colors:  '🎨 Colors',
+  everyday:'💬 Everyday',
+};
+
+const FILL_QUESTIONS = [
+  { q:'Con ___ sủa.',            en:'The ___ barks.',             ans:'chó',       wrong:['mèo','cá','gà'] },
+  { q:'Mẹ nấu ___.',             en:'Mom cooks ___.',              ans:'cơm',       wrong:['nước','táo','sữa'] },
+  { q:'Con ___ bay.',            en:'The ___ flies.',              ans:'chim',      wrong:['heo','ếch','cá'] },
+  { q:'Tôi ăn ___.',             en:'I eat ___.',                  ans:'bánh mì',   wrong:['ngủ','chơi','nước'] },
+  { q:'___ là màu đỏ.',          en:'___ is red.',                 ans:'Quả táo',   wrong:['Con chó','Nước','Trứng'] },
+  { q:'Xin chào, ___ ơi!',       en:'Hello, friend!',             ans:'bạn',       wrong:['ăn','ngủ','không'] },
+  { q:'Con ___ quang quác.',     en:'The ___ quacks.',             ans:'vịt',       wrong:['gà','chó','thỏ'] },
+  { q:'Tôi muốn uống ___.',      en:'I want to drink ___.',        ans:'nước',      wrong:['cơm','táo','trứng'] },
+  { q:'Một cộng một là ___.',    en:'One plus one is ___.',        ans:'hai',       wrong:['ba','bốn','năm'] },
+  { q:'Con ___ kêu meo meo.',    en:'The ___ says meow.',          ans:'mèo',       wrong:['chó','gà','vịt'] },
+  { q:'Màu của mặt trời là ___.',en:'The sun is ___ in color.',   ans:'vàng',      wrong:['đỏ','xanh lá','đen'] },
+  { q:'Tôi ___ buổi tối.',       en:'I ___ at night.',             ans:'ngủ',       wrong:['ăn','chơi','chào'] },
+  { q:'Cảm ___, bạn!',           en:'Thank ___, friend!',          ans:'ơn',        wrong:['chào','không','vâng'] },
+  { q:'Ông và ___ là ông bà.',   en:'Grandpa and ___ are grandparents.',ans:'bà',   wrong:['mẹ','cô','chú'] },
+  { q:'Con ___ ủn ỉn.',          en:'The ___ oinks.',              ans:'heo',       wrong:['chó','mèo','vịt'] },
+  { q:'Mười trừ ___ là chín.',   en:'Ten minus ___ is nine.',      ans:'một',       wrong:['hai','ba','bốn'] },
+  { q:'___ là màu của lá cây.',  en:'___ is the color of leaves.', ans:'Xanh lá',   wrong:['Đỏ','Vàng','Hồng'] },
+  { q:'Chuối có màu ___.',       en:'Bananas are ___ in color.',   ans:'vàng',      wrong:['đỏ','trắng','xanh dương'] },
+  { q:'Con ___ nhảy.',           en:'The ___ jumps.',              ans:'thỏ',       wrong:['cá','gà','heo'] },
+  { q:'Tôi ___ bánh mì.',        en:'I ___ bread.',                ans:'ăn',        wrong:['ngủ','chơi','uống'] },
+  { q:'Con chó Corgi rất ___.',  en:'Corgis are very ___.',        ans:'tốt',       wrong:['đỏ','ngủ','ăn'] },
+  { q:'___ lau nhà.',            en:'___ cleans the floor.',       ans:'Rô-bốt',    wrong:['Con cá','Táo','Trứng'] },
+];
+
+const ROOMBA_COMMANDS = [
+  { vi:'Đứng lên!',     en:'Stand up!',       action:'standup' },
+  { vi:'Ngồi xuống!',   en:'Sit down!',       action:'sitdown' },
+  { vi:'Vỗ tay!',       en:'Clap!',           action:'clap' },
+  { vi:'Nhảy!',         en:'Jump!',           action:'jump' },
+  { vi:'Giơ tay lên!',  en:'Raise your hands!',action:'raisehand' },
+  { vi:'Xoay người!',   en:'Spin around!',    action:'spin' },
+  { vi:'Chạy tại chỗ!', en:'Run in place!',   action:'run' },
+  { vi:'Cúi xuống!',    en:'Bow down!',       action:'bow' },
+];
+
+const ALL_ACTIONS = [
+  { action:'standup',   emoji:'🧍', label:'Stand Up' },
+  { action:'sitdown',   emoji:'🧎', label:'Sit Down' },
+  { action:'clap',      emoji:'👏', label:'Clap' },
+  { action:'jump',      emoji:'🦘', label:'Jump' },
+  { action:'raisehand', emoji:'🙋', label:'Raise Hands' },
+  { action:'spin',      emoji:'🌀', label:'Spin' },
+  { action:'run',       emoji:'🏃', label:'Run' },
+  { action:'bow',       emoji:'🙇', label:'Bow' },
+];
+
+const TONES = [
+  { syllable: 'ma',  mark: 'No mark (ngang)', emoji: '→', meaning: 'ghost', desc: 'Flat, mid-level tone' },
+  { syllable: 'mà',  mark: 'Grave (huyền)',   emoji: '\\', meaning: 'but', desc: 'Low, falling tone' },
+  { syllable: 'má',  mark: 'Acute (sắc)',     emoji: '/', meaning: 'mom', desc: 'High, rising tone' },
+  { syllable: 'mả',  mark: 'Hook (hỏi)',      emoji: '~', meaning: 'grave', desc: 'Dipping then rising' },
+  { syllable: 'mã',  mark: 'Tilde (ngã)',     emoji: '∿', meaning: 'horse', desc: 'Broken rising tone' },
+  { syllable: 'mạ',  mark: 'Dot (nặng)',      emoji: '.', meaning: 'rice seedling', desc: 'Heavy, low tone' },
+];
+
+const CHEERS = [
+  '🌟 Giỏi lắm!\nGreat job!',
+  '🎉 Làm tốt lắm!\nWell done!',
+  '⭐ Xuất sắc!\nExcellent!',
+  '🤖 Roomba vui!\nRoomba is happy!',
+  '🐕 Đúng rồi!\nCorrect! Woof!',
+  '🚂 Tuyệt vời!\nAmazing!',
+  '🏆 Số một!\nNumber one!',
+  '🎊 Chuẩn luôn!\nSpot on!',
+];
+
+/* ============================================================
+   SPEECH SYNTHESIS - PRONUNCIATION
+   ============================================================ */
+let voicesLoaded = false;
+let viVoice = null;
+
+// Load and find Vietnamese voice
+function loadVoices() {
+  if (!window.speechSynthesis) return;
+  
+  const voices = speechSynthesis.getVoices();
+  viVoice = voices.find(v => v.lang.startsWith('vi'));
+  
+  if (viVoice) {
+    console.log("Found Vietnamese voice:", viVoice.name, viVoice.lang);
+  } else {
+    console.warn("No Vietnamese voice found. Available voices:");
+    voices.forEach(v => console.log(`  ${v.name} (${v.lang})`));
+  }
+  
+  voicesLoaded = true;
+}
+
+// Initialize voices
+if (window.speechSynthesis) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+  setTimeout(loadVoices, 100);
+  setTimeout(loadVoices, 1000);
+}
+
+// Diagnostic function
+window.checkVoices = function() {
+  if (!window.speechSynthesis) {
+    const result = "Speech synthesis not supported in this browser";
+    document.getElementById('voice-check-result').innerHTML = result;
+    document.getElementById('voice-check-result').style.display = 'block';
+    return;
+  }
+  
+  const voices = speechSynthesis.getVoices();
+  let html = "<strong>=== VOICE DIAGNOSTIC ===</strong><br>";
+  html += `Total voices: ${voices.length}<br><br>`;
+  
+  html += "<strong>Vietnamese voices:</strong><br>";
+  const viVoices = voices.filter(v => v.lang.startsWith('vi'));
+  if (viVoices.length === 0) {
+    html += "❌ No Vietnamese voices found<br>";
+  } else {
+    viVoices.forEach(v => html += `✅ ${v.name} (${v.lang}) - ${v.localService ? 'local' : 'remote'}<br>`);
+  }
+  
+  html += "<br><strong>All available voices:</strong><br>";
+  voices.slice(0, 10).forEach(v => html += `  ${v.name} (${v.lang})<br>`);
+  if (voices.length > 10) html += `  ... and ${voices.length - 10} more<br>`;
+  
+  document.getElementById('voice-check-result').innerHTML = html;
+  document.getElementById('voice-check-result').style.display = 'block';
+};
+
+// Speak Vietnamese text
+function speak(text) {
+  if (!window.speechSynthesis) {
+    console.warn("Speech synthesis not available");
+    return;
+  }
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'vi-VN';
+    u.rate = 0.8;
+    
+    if (viVoice) {
+      u.voice = viVoice;
+    } else if (voicesLoaded) {
+      console.warn("No Vietnamese voice available, using default");
+    }
+
+    speechSynthesis.speak(u);
+  } catch(e) {
+    console.error("Speech synthesis error:", e);
+  }
+}
+
+// Speak current flashcard
+function speakCurrentCard() {
+  const items = VOCAB[fc.cat];
+  if (items && items[fc.idx]) {
+    speak(items[fc.idx].vi);
+  }
+}
+
+// Speak Roomba command
+function speakRoombaCommand() {
+  if (rs.cmd) {
+    speak(rs.cmd.vi);
+  }
+}
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let _ctx;
+function ac() { if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)(); return _ctx; }
+
+function tone(freq, type, dur, vol, delay=0) {
+  try {
+    const c = ac(), osc = c.createOscillator(), g = c.createGain();
+    osc.connect(g); g.connect(c.destination);
+    osc.frequency.value = freq; osc.type = type;
+    const t = c.currentTime + delay;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    osc.start(t); osc.stop(t + dur);
+  } catch(e) {}
+}
+
+function playCorrect() {
+  [523, 659, 784].forEach((f, i) => tone(f, 'sine', 0.28, 0.3, i * 0.1));
+}
+function playWrong() {
+  tone(220, 'sawtooth', 0.4, 0.2);
+}
+function playFlip() {
+  tone(440, 'sine', 0.18, 0.15);
+}
+function playStar() {
+  [800, 1000, 1200, 1600].forEach((f, i) => tone(f, 'sine', 0.22, 0.18, i * 0.08));
+}
+
+// Vietnamese tone sounds
+function playVietnamTone(toneIndex) {
+  const patterns = [
+    [330, 330, 330],  // flat
+    [330, 280, 250],  // falling
+    [280, 330, 380],  // rising
+    [330, 280, 330],  // dipping
+    [330, 280, 350],  // broken rising
+    [280, 250, 220],  // heavy
+  ];
+  if (toneIndex < 0 || toneIndex >= patterns.length) return;
+  patterns[toneIndex].forEach((freq, i) => {
+    tone(freq, 'sine', 0.2, 0.15, i * 0.15);
+  });
+}
+
+/* ============================================================
+   PROGRESS / STORAGE
+   ============================================================ */
+function getProgress() {
+  try { return JSON.parse(localStorage.getItem('viet_mo') || '{}'); } catch(e) { return {}; }
+}
+function addStar(key) {
+  const p = getProgress();
+  p[key] = (p[key] || 0) + 1;
+  localStorage.setItem('viet_mo', JSON.stringify(p));
+  updateMenuStars();
+}
+function totalStars() {
+  return Object.values(getProgress()).reduce((a, b) => a + b, 0);
+}
+function updateMenuStars() {
+  const n = Math.min(totalStars(), 50);
+  const shown = Math.min(Math.round(n / 3), 10);
+  document.getElementById('menu-stars').textContent =
+    shown > 0 ? '⭐'.repeat(shown) : '(Go play to earn stars!)';
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome() { showScreen('screen-menu'); updateMenuStars(); }
+function showVoiceInfo() { showScreen('screen-voice'); }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTmr;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg.replace('\n', '<br>');
+  t.classList.add('show');
+  clearTimeout(toastTmr);
+  toastTmr = setTimeout(() => t.classList.remove('show'), 1700);
+}
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+function pick(a, n) { return shuffle(a).slice(0, n); }
+
+/* ============================================================
+   FLASHCARDS
+   ============================================================ */
+let fc = { cat: 'animals', idx: 0, flipped: false };
+
+function startFlashcards() {
+  fc = { cat: 'animals', idx: 0, flipped: false };
+  showScreen('screen-flashcards');
+  buildCatTabs();
+  renderCard();
+}
+
+function buildCatTabs() {
+  const el = document.getElementById('cat-tabs');
+  el.innerHTML = '';
+  Object.entries(CAT_LABELS).forEach(([key, label]) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-tab' + (key === fc.cat ? ' active' : '');
+    btn.textContent = label;
+    btn.onclick = () => { fc.cat = key; fc.idx = 0; buildCatTabs(); renderCard(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderCard() {
+  const w = VOCAB[fc.cat][fc.idx];
+  fc.flipped = false;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fc-emoji').textContent  = w.emoji;
+  document.getElementById('fc-emoji-b').textContent= w.emoji;
+  document.getElementById('fc-en').textContent     = w.en;
+  document.getElementById('fc-vi').textContent     = w.vi;
+  const len = VOCAB[fc.cat].length;
+  document.getElementById('fc-counter').textContent = `${fc.idx + 1} / ${len}`;
+}
+
+function flipCard() {
+  fc.flipped = !fc.flipped;
+  document.getElementById('flashcard').classList.toggle('flipped', fc.flipped);
+  playFlip();
+  if (fc.flipped) addStar('fc');
+}
+
+function prevCard() {
+  fc.idx = (fc.idx - 1 + VOCAB[fc.cat].length) % VOCAB[fc.cat].length;
+  renderCard();
+}
+function nextCard() {
+  fc.idx = (fc.idx + 1) % VOCAB[fc.cat].length;
+  renderCard();
+}
+
+/* ============================================================
+   WORD MATCH
+   ============================================================ */
+let ms = { pairs: [], sel: null, matched: 0 };
+
+function startWordMatch() {
+  showScreen('screen-match');
+  document.getElementById('match-next').style.display = 'none';
+
+  const all = Object.values(VOCAB).flat();
+  ms.pairs = pick(all, 6);
+  ms.sel   = null;
+  ms.matched = 0;
+  document.getElementById('match-score').textContent = 'Matched: 0 / 6';
+
+  const lefts  = shuffle(ms.pairs.map((p, i) => ({ text: p.en, idx: i, side: 'en' })));
+  const rights = shuffle(ms.pairs.map((p, i) => ({ text: p.vi, idx: i, side: 'vi' })));
+
+  function makeBtn(item) {
+    const btn = document.createElement('button');
+    btn.className = 'match-btn';
+    btn.textContent = item.text;
+    btn.dataset.idx  = item.idx;
+    btn.dataset.side = item.side;
+    btn.onclick = () => matchTap(btn);
+    return btn;
+  }
+
+  document.getElementById('match-left').innerHTML  = '';
+  document.getElementById('match-right').innerHTML = '';
+  lefts.forEach(it  => document.getElementById('match-left').appendChild(makeBtn(it)));
+  rights.forEach(it => document.getElementById('match-right').appendChild(makeBtn(it)));
+}
+
+function matchTap(btn) {
+  if (btn.classList.contains('matched')) return;
+
+  // Speak Vietnamese words when tapped
+  if (btn.dataset.side === 'vi') {
+    speak(btn.textContent);
+  }
+
+  if (!ms.sel) {
+    ms.sel = btn;
+    btn.classList.add('selected');
+    return;
+  }
+  if (ms.sel === btn) {
+    btn.classList.remove('selected');
+    ms.sel = null;
+    return;
+  }
+  if (ms.sel.dataset.side === btn.dataset.side) {
+    ms.sel.classList.remove('selected');
+    ms.sel = btn;
+    btn.classList.add('selected');
+    return;
+  }
+
+  const prev = ms.sel;
+  ms.sel = null;
+
+  if (prev.dataset.idx === btn.dataset.idx) {
+    prev.classList.remove('selected');
+    prev.classList.add('matched');
+    btn.classList.add('matched');
+    ms.matched++;
+    playCorrect();
+    showToast(CHEERS[Math.floor(Math.random() * CHEERS.length)]);
+    addStar('match');
+    document.getElementById('match-score').textContent = `Matched: ${ms.matched} / 6`;
+    if (ms.matched === 6) {
+      playStar();
+      setTimeout(() => { document.getElementById('match-next').style.display = 'block'; }, 600);
+    }
+  } else {
+    prev.classList.remove('selected');
+    [prev, btn].forEach(b => {
+      b.classList.add('wrong');
+      setTimeout(() => b.classList.remove('wrong'), 600);
+    });
+    playWrong();
+  }
+}
+
+/* ============================================================
+   FILL IN THE BLANK
+   ============================================================ */
+let fb = { qs: [], cur: 0, score: 0, done: false };
+
+function startFillBlank() {
+  showScreen('screen-fitb');
+  fb.qs    = pick(FILL_QUESTIONS, 10);
+  fb.cur   = 0;
+  fb.score = 0;
+  fb.done  = false;
+  renderFB();
+}
+
+function renderFB() {
+  if (fb.done) return;
+  const q = fb.qs[fb.cur];
+  document.getElementById('fitb-progress').textContent = `Question ${fb.cur + 1} / ${fb.qs.length}`;
+  document.getElementById('fitb-score').textContent    = `⭐ Score: ${fb.score}`;
+  document.getElementById('fitb-question').textContent = q.q;
+  document.getElementById('fitb-translation').textContent = q.en;
+
+  const opts = shuffle([q.ans, ...q.wrong]);
+  const el   = document.getElementById('fitb-options');
+  el.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className   = 'fitb-btn';
+    btn.textContent = opt;
+    btn.onclick     = () => answerFB(btn, opt === q.ans, q.ans);
+    el.appendChild(btn);
+  });
+}
+
+function answerFB(btn, correct, right) {
+  if (fb.done) return;
+
+  document.querySelectorAll('.fitb-btn').forEach(b => b.onclick = null);
+
+  // Speak the correct answer
+  speak(right);
+
+  if (correct) {
+    btn.classList.add('correct');
+    fb.score++;
+    playCorrect();
+    showToast(CHEERS[Math.floor(Math.random() * CHEERS.length)]);
+    addStar('fitb');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.fitb-btn').forEach(b => {
+      if (b.textContent === right) b.classList.add('correct');
+    });
+    playWrong();
+  }
+
+  document.getElementById('fitb-score').textContent = `⭐ Score: ${fb.score}`;
+
+  setTimeout(() => {
+    fb.cur++;
+    if (fb.cur < fb.qs.length) {
+      renderFB();
+    } else {
+      finishFB();
+    }
+  }, 1200);
+}
+
+function finishFB() {
+  fb.done = true;
+  const s = fb.score, t = fb.qs.length;
+  document.getElementById('fitb-question').innerHTML = `🎉 Done!<br>Score: ${s} / ${t}`;
+  document.getElementById('fitb-translation').textContent =
+    s >= 7 ? '🌟 Giỏi lắm! Great job!' : '💪 Cố lên! Keep going!';
+  const el = document.getElementById('fitb-options');
+  el.innerHTML = '';
+  ['🔄 Play Again! → startFillBlank()', '🏠 Menu → goHome()'].forEach(spec => {
+    const [label, fn] = spec.split(' → ');
+    const btn = document.createElement('button');
+    btn.className = 'fitb-btn';
+    btn.textContent = label;
+    btn.style.gridColumn = '1 / -1';
+    btn.onclick = () => eval(fn);
+    el.appendChild(btn);
+  });
+  if (s >= 7) playStar();
+}
+
+/* ============================================================
+   TONE EXPLORER
+   ============================================================ */
+function startToneExplorer() {
+  showScreen('screen-tone');
+  const grid = document.getElementById('tone-grid');
+  grid.innerHTML = '';
+  
+  TONES.forEach((tone, i) => {
+    const card = document.createElement('div');
+    card.className = 'tone-card';
+    card.id = 'tone-card-' + i;
+    card.innerHTML = `
+      <div class="tone-syllable">${tone.syllable}</div>
+      <div class="tone-mark-name">${tone.mark}</div>
+      <div class="tone-emoji">${tone.emoji}</div>
+      <div class="tone-meaning">Meaning: <strong>${tone.meaning}</strong></div>
+      <div class="tone-desc">${tone.desc}</div>
+      <div class="tone-play-hint">▶ Tap to hear!</div>
+    `;
+    card.onclick = () => {
+      speak(tone.syllable);
+      playVietnamTone(i);
+      card.classList.add('playing');
+      setTimeout(() => card.classList.remove('playing'), 900);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============================================================
+   ROOMBA SAYS
+   ============================================================ */
+let rs = { score: 0, streak: 0, canAns: true, cmd: null };
+
+function startRoombaSays() {
+  showScreen('screen-roomba');
+  rs = { score: 0, streak: 0, canAns: true, cmd: null };
+  nextRoombaCmd();
+}
+
+function nextRoombaCmd() {
+  rs.canAns = true;
+  rs.cmd    = ROOMBA_COMMANDS[Math.floor(Math.random() * ROOMBA_COMMANDS.length)];
+
+  document.getElementById('roomba-cmd-vi').textContent = rs.cmd.vi;
+  document.getElementById('roomba-cmd-en').textContent = '❓ What should Mỡ do?';
+  updateRoombaScore();
+
+  const correct = ALL_ACTIONS.find(a => a.action === rs.cmd.action);
+  const others  = shuffle(ALL_ACTIONS.filter(a => a.action !== rs.cmd.action)).slice(0, 3);
+  const choices = shuffle([correct, ...others]);
+
+  const el = document.getElementById('roomba-actions');
+  el.innerHTML = '';
+  choices.forEach(act => {
+    const btn = document.createElement('button');
+    btn.className = 'action-btn';
+    btn.innerHTML = `<span class="action-emoji">${act.emoji}</span><span class="action-label">${act.label}</span>`;
+    btn.onclick = () => answerRoomba(btn, act.action === rs.cmd.action, rs.cmd.action);
+    el.appendChild(btn);
+  });
+}
+
+function answerRoomba(btn, correct, rightAction) {
+  if (!rs.canAns) return;
+  rs.canAns = false;
+
+  document.getElementById('roomba-cmd-en').textContent = rs.cmd.en;
+  document.querySelectorAll('.action-btn').forEach(b => b.onclick = null);
+
+  if (correct) {
+    btn.classList.add('correct');
+    rs.score++;
+    rs.streak++;
+    playCorrect();
+    if (rs.streak % 3 === 0) playStar();
+    showToast(CHEERS[Math.floor(Math.random() * CHEERS.length)]);
+    addStar('roomba');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.action-btn').forEach(b => {
+      const lbl = b.querySelector('.action-label').textContent;
+      const act = ALL_ACTIONS.find(a => a.label === lbl);
+      if (act && act.action === rightAction) b.classList.add('correct');
+    });
+    rs.streak = 0;
+    playWrong();
+  }
+
+  updateRoombaScore();
+  setTimeout(nextRoombaCmd, 1600);
+}
+
+function updateRoombaScore() {
+  document.getElementById('roomba-score').textContent  = `⭐ ${rs.score}`;
+  document.getElementById('roomba-streak').textContent = `🔥 ${rs.streak}`;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+updateMenuStars();
+</script>
+</body>
+</html>
