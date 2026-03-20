@@ -698,9 +698,9 @@
         </div>
         <div class="card-face card-back">
           <span class="card-emoji" id="fc-emoji-b">🐕</span>
-          <span class="card-viet" id="fc-vi" onclick="speakCurrentCard()">con chó</span>
-          <button class="speak-btn" onclick="speakCurrentCard()">🔊</button>
-          <span class="card-hint-b">Tap word to hear it! 👆</span>
+          <span class="card-viet" id="fc-vi" onclick="event.stopPropagation(); speakCurrentCard()">con chó</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakCurrentCard()">🔊</button>
+          <span class="card-hint-b">Tap 🔊 to hear! Tap card to flip 👆</span>
         </div>
       </div>
     </div>
@@ -855,14 +855,14 @@ const VOCAB = {
     { en: 'Chicken',      vi: 'con gà',        emoji: '🐓' },
     { en: 'Duck',         vi: 'con vịt',       emoji: '🦆' },
     { en: 'Fish',         vi: 'con cá',        emoji: '🐟' },
-    { en: 'Pig',          vi: 'con heo',       emoji: '🐷' },
+    { en: 'Pig',          vi: 'con lợn',       emoji: '🐷' },
     { en: 'Corgi',        vi: 'chó corgi',     emoji: '🐕‍🦺' },
     { en: 'Bird',         vi: 'con chim',      emoji: '🐦' },
     { en: 'Frog',         vi: 'con ếch',       emoji: '🐸' },
     { en: 'Rabbit',       vi: 'con thỏ',       emoji: '🐰' },
   ],
   family: [
-    { en: 'Dad',          vi: 'ba / bố',       emoji: '👨' },
+    { en: 'Dad',          vi: 'bố',            emoji: '👨' },
     { en: 'Mom',          vi: 'mẹ',            emoji: '👩' },
     { en: 'Older Brother',vi: 'anh',           emoji: '👦' },
     { en: 'Older Sister', vi: 'chị',           emoji: '👧' },
@@ -946,7 +946,7 @@ const FILL_QUESTIONS = [
   { q:'Tôi ___ buổi tối.',       en:'I ___ at night.',             ans:'ngủ',       wrong:['ăn','chơi','chào'] },
   { q:'Cảm ___, bạn!',           en:'Thank ___, friend!',          ans:'ơn',        wrong:['chào','không','vâng'] },
   { q:'Ông và ___ là ông bà.',   en:'Grandpa and ___ are grandparents.',ans:'bà',   wrong:['mẹ','cô','chú'] },
-  { q:'Con ___ ủn ỉn.',          en:'The ___ oinks.',              ans:'heo',       wrong:['chó','mèo','vịt'] },
+  { q:'Con ___ ủn ỉn.',          en:'The ___ oinks.',              ans:'lợn',       wrong:['chó','mèo','vịt'] },
   { q:'Mười trừ ___ là chín.',   en:'Ten minus ___ is nine.',      ans:'một',       wrong:['hai','ba','bốn'] },
   { q:'___ là màu của lá cây.',  en:'___ is the color of leaves.', ans:'Xanh lá',   wrong:['Đỏ','Vàng','Hồng'] },
   { q:'Chuối có màu ___.',       en:'Bananas are ___ in color.',   ans:'vàng',      wrong:['đỏ','trắng','xanh dương'] },
