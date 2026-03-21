@@ -620,6 +620,63 @@
       .card-english, .card-viet { font-size: 24px; }
       .tone-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── Sentences ── */
+    .sent-category {
+      margin-bottom: 24px;
+    }
+    .sent-category-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #DA251D;
+      margin-bottom: 12px;
+      padding: 8px 14px;
+      background: #FFCD00;
+      border-radius: 14px;
+      display: inline-block;
+    }
+    .sent-card {
+      background: white;
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 0 #E0D0C0, 0 6px 14px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .sent-text-wrap {
+      flex: 1;
+    }
+    .sent-vi {
+      font-size: 24px;
+      font-weight: 900;
+      color: #1a1a1a;
+      line-height: 1.3;
+      display: block;
+    }
+    .sent-en {
+      font-size: 14px;
+      color: #888;
+      margin-top: 4px;
+      display: block;
+    }
+    .sent-speak-btn {
+      background: #DA251D;
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-size: 24px;
+      padding: 10px 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #8B0000;
+      transition: transform 0.1s, box-shadow 0.1s;
+      flex-shrink: 0;
+    }
+    .sent-speak-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #8B0000;
+    }
   </style>
 </head>
 <body>
@@ -669,6 +726,10 @@
     <button class="menu-btn" onclick="startRoombaSays()">
       <span class="btn-emoji">🤖</span>
       Roomba Says!
+    </button>
+    <button class="menu-btn" onclick="showSentences()">
+      <span class="btn-emoji">📝</span>
+      Câu
     </button>
     <button class="menu-btn full-width" onclick="showVoiceInfo()">
       <span class="btn-emoji">🔊</span>
@@ -841,6 +902,173 @@
     </button>
 
     <div id="voice-check-result" style="background:#eee; border-radius:12px; padding:16px; margin-top:20px; font-family:monospace; font-size:12px; display:none;"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SENTENCES
+════════════════════════════════════════ -->
+<div class="screen game-screen" id="screen-sentences">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h1>📝 Câu</h1>
+  </div>
+
+  <div style="max-width:600px; margin:0 auto; width:100%;">
+
+    <!-- Greetings -->
+    <div class="sent-category">
+      <div class="sent-category-title">👋 Chào hỏi · Greetings</div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Chào buổi sáng!</span>
+          <span class="sent-en">Good morning!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Chào buổi sáng')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Tạm biệt nhé!</span>
+          <span class="sent-en">Goodbye!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Tạm biệt nhé')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Cảm ơn bạn nhé!</span>
+          <span class="sent-en">Thank you!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Cảm ơn bạn nhé')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Xin lỗi bạn nhé!</span>
+          <span class="sent-en">Sorry / Excuse me!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Xin lỗi bạn nhé')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Bạn khỏe không?</span>
+          <span class="sent-en">How are you?</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Bạn khỏe không')">🔊</button>
+      </div>
+    </div>
+
+    <!-- Family -->
+    <div class="sent-category">
+      <div class="sent-category-title">👨‍👩‍👧 Gia đình · Family</div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con yêu bố mẹ!</span>
+          <span class="sent-en">I love mom and dad!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con yêu bố mẹ')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Bố ơi, con muốn ăn!</span>
+          <span class="sent-en">Dad, I want to eat!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Bố ơi, con muốn ăn')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Mỡ ơi, ăn cơm!</span>
+          <span class="sent-en">Mo, time to eat rice!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Mỡ ơi, ăn cơm')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con đi ngủ đây!</span>
+          <span class="sent-en">I'm going to sleep!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con đi ngủ đây')">🔊</button>
+      </div>
+    </div>
+
+    <!-- Daily Life -->
+    <div class="sent-category">
+      <div class="sent-category-title">🌞 Hàng ngày · Daily Life</div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con muốn uống nước.</span>
+          <span class="sent-en">I want to drink water.</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con muốn uống nước')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con muốn chơi ngoài!</span>
+          <span class="sent-en">I want to play outside!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con muốn chơi ngoài')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Hôm nay trời đẹp quá!</span>
+          <span class="sent-en">The weather is so nice today!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Hôm nay trời đẹp quá')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con đi học rồi!</span>
+          <span class="sent-en">I'm going to school!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con đi học rồi')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con ăn cơm rồi!</span>
+          <span class="sent-en">I already ate rice!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con ăn cơm rồi')">🔊</button>
+      </div>
+    </div>
+
+    <!-- Feelings -->
+    <div class="sent-category">
+      <div class="sent-category-title">😊 Cảm xúc · Feelings</div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con vui lắm!</span>
+          <span class="sent-en">I'm very happy!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con vui lắm')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con buồn quá!</span>
+          <span class="sent-en">I'm so sad!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con buồn quá')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con sợ lắm!</span>
+          <span class="sent-en">I'm very scared!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con sợ lắm')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Con đói bụng rồi!</span>
+          <span class="sent-en">I'm hungry already!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Con đói bụng rồi')">🔊</button>
+      </div>
+      <div class="sent-card">
+        <div class="sent-text-wrap">
+          <span class="sent-vi">Cái này hay quá!</span>
+          <span class="sent-en">This is so cool / fun!</span>
+        </div>
+        <button class="sent-speak-btn" onclick="speak('Cái này hay quá')">🔊</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1174,6 +1402,7 @@ function showScreen(id) {
 }
 function goHome() { showScreen('screen-menu'); updateMenuStars(); }
 function showVoiceInfo() { showScreen('screen-voice'); }
+function showSentences() { showScreen('screen-sentences'); }
 
 /* ============================================================
    TOAST
