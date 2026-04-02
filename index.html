@@ -1148,6 +1148,42 @@ const VOCAB = {
     { en: 'Train',        vi: 'tàu hỏa',       emoji: '🚂' },
     { en: 'Please',       vi: 'xin',           emoji: '🤝' },
   ],
+  body: [
+    { en: 'Head',    vi: 'đầu',     emoji: '🗣️' },
+    { en: 'Eyes',    vi: 'mắt',     emoji: '👀' },
+    { en: 'Nose',    vi: 'mũi',     emoji: '👃' },
+    { en: 'Mouth',   vi: 'miệng',   emoji: '👄' },
+    { en: 'Hands',   vi: 'tay',     emoji: '🤚' },
+    { en: 'Feet',    vi: 'chân',    emoji: '🦶' },
+    { en: 'Ears',    vi: 'tai',     emoji: '👂' },
+    { en: 'Stomach', vi: 'bụng',    emoji: '🫃' },
+    { en: 'Back',    vi: 'lưng',    emoji: '🔙' },
+    { en: 'Hair',    vi: 'tóc',     emoji: '💇' },
+  ],
+  actions: [
+    { en: 'Run',    vi: 'chạy',      emoji: '🏃' },
+    { en: 'Jump',   vi: 'nhảy',      emoji: '🦘' },
+    { en: 'Swim',   vi: 'bơi',       emoji: '🏊' },
+    { en: 'Read',   vi: 'đọc',       emoji: '📖' },
+    { en: 'Draw',   vi: 'vẽ',        emoji: '✏️' },
+    { en: 'Sing',   vi: 'hát',       emoji: '🎵' },
+    { en: 'Dance',  vi: 'nhảy múa',  emoji: '💃' },
+    { en: 'Throw',  vi: 'ném',       emoji: '🤾' },
+    { en: 'Kick',   vi: 'đá',        emoji: '⚽' },
+    { en: 'Hug',    vi: 'ôm',        emoji: '🤗' },
+  ],
+  places: [
+    { en: 'School',        vi: 'trường học',  emoji: '🏫' },
+    { en: 'Home',          vi: 'nhà',         emoji: '🏠' },
+    { en: 'Park',          vi: 'công viên',   emoji: '🌳' },
+    { en: 'Hospital',      vi: 'bệnh viện',   emoji: '🏥' },
+    { en: 'Store',         vi: 'cửa hàng',    emoji: '🏪' },
+    { en: 'Library',       vi: 'thư viện',    emoji: '📚' },
+    { en: 'Restaurant',    vi: 'nhà hàng',    emoji: '🍽️' },
+    { en: 'Beach',         vi: 'bãi biển',    emoji: '🏖️' },
+    { en: 'Train Station', vi: 'ga tàu',      emoji: '🚉' },
+    { en: 'Bathroom',      vi: 'nhà vệ sinh', emoji: '🚿' },
+  ],
 };
 
 const CAT_LABELS = {
@@ -1157,6 +1193,9 @@ const CAT_LABELS = {
   numbers: '🔢 Numbers',
   colors:  '🎨 Colors',
   everyday:'💬 Everyday',
+  body:    '🫀 Body',
+  actions: '🏃 Actions',
+  places:  '📍 Places',
 };
 
 const FILL_QUESTIONS = [
@@ -1182,6 +1221,21 @@ const FILL_QUESTIONS = [
   { q:'Tôi ___ bánh mì.',        en:'I ___ bread.',                ans:'ăn',        wrong:['ngủ','chơi','uống'] },
   { q:'Con chó Corgi rất ___.',  en:'Corgis are very ___.',        ans:'tốt',       wrong:['đỏ','ngủ','ăn'] },
   { q:'___ lau nhà.',            en:'___ cleans the floor.',       ans:'Rô-bốt',    wrong:['Con cá','Táo','Trứng'] },
+  { q:'Tôi nhìn bằng ___.',     en:'I see with my ___.',          ans:'mắt',        wrong:['tai','mũi','tay'] },
+  { q:'Tôi nghe bằng ___.',     en:'I hear with my ___.',         ans:'tai',        wrong:['mắt','miệng','chân'] },
+  { q:'Tôi ăn bằng ___.',       en:'I eat with my ___.',          ans:'miệng',      wrong:['mũi','tay','chân'] },
+  { q:'Tóc mọc trên ___.',      en:'Hair grows on the ___.',      ans:'đầu',        wrong:['tay','chân','bụng'] },
+  { q:'Tôi chạy bằng ___.',     en:'I run with my ___.',          ans:'chân',       wrong:['tay','đầu','lưng'] },
+  { q:'Tôi ___ trong hồ bơi.', en:'I ___ in the pool.',          ans:'bơi',        wrong:['chạy','nhảy','hát'] },
+  { q:'Tôi ___ quyển sách.',    en:'I ___ a book.',               ans:'đọc',        wrong:['vẽ','hát','ném'] },
+  { q:'Tôi ___ bức tranh.',     en:'I ___ a picture.',            ans:'vẽ',         wrong:['đọc','hát','ném'] },
+  { q:'Tôi ___ bài hát.',       en:'I ___ a song.',               ans:'hát',        wrong:['đọc','vẽ','bơi'] },
+  { q:'Tôi ___ trên sân khấu.', en:'I ___ on stage.',             ans:'nhảy múa',   wrong:['bơi','chạy','đọc'] },
+  { q:'Tôi học ở ___.',         en:'I study at the ___.',         ans:'trường học', wrong:['nhà hàng','bãi biển','bệnh viện'] },
+  { q:'Tôi ngủ ở ___.',         en:'I sleep at ___.',             ans:'nhà',        wrong:['trường học','công viên','ga tàu'] },
+  { q:'Tôi mượn sách ở ___.',   en:'I borrow books at the ___.',  ans:'thư viện',   wrong:['cửa hàng','nhà hàng','bệnh viện'] },
+  { q:'Tôi ăn tối ở ___.',      en:'I eat dinner at the ___.',    ans:'nhà hàng',   wrong:['bệnh viện','ga tàu','thư viện'] },
+  { q:'Tôi chơi ở ___.',        en:'I play at the ___.',          ans:'công viên',  wrong:['bệnh viện','ga tàu','nhà vệ sinh'] },
 ];
 
 const ROOMBA_COMMANDS = [
