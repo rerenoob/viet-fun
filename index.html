@@ -1507,12 +1507,12 @@ function playVietnamTone(toneIndex) {
    PROGRESS / STORAGE
    ============================================================ */
 function getProgress() {
-  try { return JSON.parse(localStorage.getItem('viet_mo') || '{}'); } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem('viet_mo_2') || '{}'); } catch(e) { return {}; }
 }
 function addStar(key) {
   const p = getProgress();
   p[key] = (p[key] || 0) + 1;
-  localStorage.setItem('viet_mo', JSON.stringify(p));
+  localStorage.setItem('viet_mo_2', JSON.stringify(p));
   updateMenuStars();
 }
 function totalStars() {
@@ -1885,3 +1885,4 @@ updateMenuStars();
 </script>
 </body>
 </html>
+// v2 level system
