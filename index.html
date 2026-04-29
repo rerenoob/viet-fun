@@ -1149,7 +1149,7 @@ const VOCAB = {
     { en: 'Chicken',      vi: 'con gà',        emoji: '🐓' },
     { en: 'Duck',         vi: 'con vịt',       emoji: '🦆' },
     { en: 'Fish',         vi: 'con cá',        emoji: '🐟' },
-    { en: 'Pig',          vi: 'con lợn',       emoji: '🐷' },
+    { en: 'Pig',          vi: 'con heo',       emoji: '🐷' },
     { en: 'Corgi',        vi: 'chó corgi',     emoji: '🐕‍🦺' },
     { en: 'Bird',         vi: 'con chim',      emoji: '🐦' },
     { en: 'Frog',         vi: 'con ếch',       emoji: '🐸' },
@@ -1699,6 +1699,7 @@ const CHEERS = [
 let currentLevel = localStorage.getItem('viet-level') || 'easy';
 
 function loadLevel() { return localStorage.getItem('viet-level') || 'easy'; }
+function getLevel() { return currentLevel; }
 function saveLevel(level) {
   localStorage.setItem('viet-level', level);
   setLevel(level);
