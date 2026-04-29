@@ -615,6 +615,40 @@
     }
     .toast.show { transform: translate(-50%, -50%) scale(1); }
 
+    /* ── Level tabs ── */
+    .level-tabs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    .level-tab {
+      background: #eee;
+      border: 3px solid #ddd;
+      border-radius: 30px;
+      padding: 7px 15px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #555;
+    }
+    .level-tab.active {
+      background: #FFCD00;
+      border-color: #DA251D;
+      color: #7B1C1C;
+    }
+    #screen-menu .level-tab {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.4);
+      color: #fff;
+    }
+    #screen-menu .level-tab.active {
+      background: #FFCD00;
+      border-color: #FFCD00;
+      color: #7B1C1C;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 400px) {
       .menu-grid { grid-template-columns: 1fr; }
@@ -710,6 +744,21 @@
 
   <div class="stars-display" id="menu-stars">⭐⭐⭐⭐⭐</div>
 
+  <div class="level-tabs">
+    <button class="level-tab active" data-level="easy"   onclick="setLevel('easy')">⭐ Easy</button>
+    <button class="level-tab"        data-level="medium" onclick="setLevel('medium')">⭐⭐ Medium</button>
+    <button class="level-tab"        data-level="hard"   onclick="setLevel('hard')">⭐⭐⭐ Hard</button>
+  </div>
+
+  <div style="margin:12px 0;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;">
+    <span style="color:white;">Level:</span>
+    <select id="level-select" onchange="saveLevel(this.value)" style="font-size:15px;padding:6px 10px;border-radius:8px;border:2px solid rgba(255,255,255,0.5);background:#C0392B;color:white;">
+      <option value="easy">Dễ</option>
+      <option value="medium">Vừa</option>
+      <option value="hard">Khó</option>
+    </select>
+  </div>
+
   <div class="menu-grid">
     <button class="menu-btn" onclick="startFlashcards()">
       <span class="btn-emoji">🃏</span>
@@ -749,6 +798,12 @@
   <div class="header">
     <button class="back-btn" onclick="goHome()">←</button>
     <h1>🃏 Flashcards</h1>
+  </div>
+
+  <div class="level-tabs">
+    <button class="level-tab active" data-level="easy"   onclick="setLevel('easy')">⭐ Easy</button>
+    <button class="level-tab"        data-level="medium" onclick="setLevel('medium')">⭐⭐ Medium</button>
+    <button class="level-tab"        data-level="hard"   onclick="setLevel('hard')">⭐⭐⭐ Hard</button>
   </div>
 
   <div class="cat-tabs" id="cat-tabs"></div>
@@ -806,6 +861,12 @@
   <div class="header">
     <button class="back-btn" onclick="goHome()">←</button>
     <h1>✏️ Fill the Blank</h1>
+  </div>
+
+  <div class="level-tabs">
+    <button class="level-tab active" data-level="easy"   onclick="setLevel('easy')">⭐ Easy</button>
+    <button class="level-tab"        data-level="medium" onclick="setLevel('medium')">⭐⭐ Medium</button>
+    <button class="level-tab"        data-level="hard"   onclick="setLevel('hard')">⭐⭐⭐ Hard</button>
   </div>
 
   <div class="fitb-progress" id="fitb-progress">Question 1 / 10</div>
@@ -1081,7 +1142,8 @@
    DATA
    ============================================================ */
 const VOCAB = {
-  animals: [
+  animals: {
+    easy:   [
     { en: 'Dog',          vi: 'con chó',       emoji: '🐕' },
     { en: 'Cat',          vi: 'con mèo',       emoji: '🐱' },
     { en: 'Chicken',      vi: 'con gà',        emoji: '🐓' },
@@ -1091,9 +1153,29 @@ const VOCAB = {
     { en: 'Corgi',        vi: 'chó corgi',     emoji: '🐕‍🦺' },
     { en: 'Bird',         vi: 'con chim',      emoji: '🐦' },
     { en: 'Frog',         vi: 'con ếch',       emoji: '🐸' },
-    { en: 'Rabbit',       vi: 'con thỏ',       emoji: '🐰' },
+    { en: 'Rabbit',       vi: 'con thỏ',       emoji: '🐰' }
   ],
-  family: [
+    medium: [
+    { en:"Squirrel",  vi:"con sóc",   emoji:"🐿️" },
+    { en:"Turtle",    vi:"con rùa",   emoji:"🐢" },
+    { en:"Butterfly", vi:"con bướm",  emoji:"🦋" },
+    { en:"Elephant",  vi:"con voi",   emoji:"🐘" },
+    { en:"Monkey",    vi:"con khỉ",   emoji:"🐒" },
+    { en:"Shark",     vi:"con cá mập",emoji:"🦈" },
+    { en:"Dragon",    vi:"con rồng",  emoji:"🐉" },
+    { en:"Crab",      vi:"con cua",   emoji:"🦀" }
+  ],
+    hard:   [
+    { en:"The cat is sleeping on the sofa",   vi:"Con mèo đang ngủ trên ghế sô pha",   emoji:"🐱" },
+    { en:"I feed the fish every morning",     vi:"Tôi cho cá ăn mỗi sáng",             emoji:"🐟" },
+    { en:"The bird is singing in the tree",   vi:"Con chim đang hót trên cây",        emoji:"🐦" },
+    { en:"My dog likes to play outside",      vi:"Chó của tôi thích chơi ngoài sân",   emoji:"🐕" },
+    { en:"The rabbit hops very fast",         vi:"Con thỏ nhảy rất nhanh",              emoji:"🐰" }
+  ],
+  },
+
+  family: {
+    easy:   [
     { en: 'Dad',          vi: 'bố',            emoji: '👨' },
     { en: 'Mom',          vi: 'mẹ',            emoji: '👩' },
     { en: 'Older Brother',vi: 'anh',           emoji: '👦' },
@@ -1102,9 +1184,29 @@ const VOCAB = {
     { en: 'Grandpa',      vi: 'ông',           emoji: '👴' },
     { en: 'Grandma',      vi: 'bà',            emoji: '👵' },
     { en: 'Aunt (young)', vi: 'cô',            emoji: '👩' },
-    { en: 'Uncle',        vi: 'chú',           emoji: '👨' },
+    { en: 'Uncle',        vi: 'chú',           emoji: '👨' }
   ],
-  food: [
+    medium: [
+    { en:"Cousin",          vi:"anh em họ",   emoji:"👥" },
+    { en:"Nephew",          vi:"cháu trai",    emoji:"👦" },
+    { en:"Niece",           vi:"cháu gái",     emoji:"👧" },
+    { en:"Father-in-law",   vi:"bố vợ",        emoji:"👴" },
+    { en:"Mother-in-law",   vi:"mẹ vợ",        emoji:"👵" },
+    { en:"Husband",         vi:"chồng",        emoji:"👨" },
+    { en:"Wife",            vi:"vợ",           emoji:"👩" },
+    { en:"Son",             vi:"con trai",     emoji:"👦" }
+  ],
+    hard:   [
+    { en:"My dad cooks dinner for us",        vi:"Bố tôi nấu bữa tối cho chúng tôi",   emoji:"👨" },
+    { en:"Grandma tells me bedtime stories",  vi:"Bà kể chuyện trước khi ngủ cho tôi", emoji:"👵" },
+    { en:"My mom drives me to school",        vi:"Mẹ chở tôi đến trường",              emoji:"👩" },
+    { en:"I love my little brother very much",vi:"Tôi yêu em trai lắm",                emoji:"🧒" },
+    { en:"We visit grandpa every weekend",    vi:"Chúng tôi thăm ông mỗi cuối tuần",   emoji:"👴" }
+  ],
+  },
+
+  food: {
+    easy:   [
     { en: 'Rice',         vi: 'cơm',           emoji: '🍚' },
     { en: 'Pho',          vi: 'phở',           emoji: '🍜' },
     { en: 'Bread',        vi: 'bánh mì',       emoji: '🥖' },
@@ -1112,9 +1214,29 @@ const VOCAB = {
     { en: 'Banana',       vi: 'chuối',         emoji: '🍌' },
     { en: 'Apple',        vi: 'táo',           emoji: '🍎' },
     { en: 'Egg',          vi: 'trứng',         emoji: '🥚' },
-    { en: 'Milk',         vi: 'sữa',           emoji: '🥛' },
+    { en: 'Milk',         vi: 'sữa',           emoji: '🥛' }
   ],
-  numbers: [
+    medium: [
+    { en:"Spring roll", vi:"chả giò",    emoji:"🌯" },
+    { en:"Noodles",     vi:"mì",         emoji:"🍝" },
+    { en:"Candy",       vi:"kẹo",        emoji:"🍬" },
+    { en:"Ice cream",   vi:"kem",        emoji:"🍦" },
+    { en:"Cake",        vi:"bánh ngọt",  emoji:"🎂" },
+    { en:"Tea",         vi:"trà",        emoji:"🍵" },
+    { en:"Coffee",      vi:"cà phê",     emoji:"☕" },
+    { en:"Coconut",     vi:"dừa",        emoji:"🥥" }
+  ],
+    hard:   [
+    { en:"I like to eat pho for breakfast",   vi:"Tôi thích ăn phở vào bữa sáng",      emoji:"🍜" },
+    { en:"Mom makes delicious spring rolls",  vi:"Mẹ làm chả giò rất ngon",            emoji:"🌯" },
+    { en:"I drink milk before going to bed",  vi:"Tôi uống sữa trước khi đi ngủ",      emoji:"🥛" },
+    { en:"The bread is fresh from the oven",  vi:"Bánh mì mới ra lò còn nóng",         emoji:"🥖" },
+    { en:"I want to eat ice cream after lunch",vi:"Tôi muốn ăn kem sau bữa trưa",      emoji:"🍦" }
+  ],
+  },
+
+  numbers: {
+    easy:   [
     { en: 'One (1)',      vi: 'một',           emoji: '1️⃣' },
     { en: 'Two (2)',      vi: 'hai',           emoji: '2️⃣' },
     { en: 'Three (3)',    vi: 'ba',            emoji: '3️⃣' },
@@ -1124,9 +1246,29 @@ const VOCAB = {
     { en: 'Seven (7)',    vi: 'bảy',           emoji: '7️⃣' },
     { en: 'Eight (8)',    vi: 'tám',           emoji: '8️⃣' },
     { en: 'Nine (9)',     vi: 'chín',          emoji: '9️⃣' },
-    { en: 'Ten (10)',     vi: 'mười',          emoji: '🔟' },
+    { en: 'Ten (10)',     vi: 'mười',          emoji: '🔟' }
   ],
-  colors: [
+    medium: [
+    { en:"Zero (0)",        vi:"không",    emoji:"0️⃣" },
+    { en:"Ten (10)",        vi:"mười",     emoji:"🔟" },
+    { en:"Twenty (20)",     vi:"hai mươi", emoji:"2️⃣0️⃣" },
+    { en:"One hundred",     vi:"một trăm", emoji:"💯" },
+    { en:"First",           vi:"thứ nhất", emoji:"🥇" },
+    { en:"Second",          vi:"thứ hai",  emoji:"🥈" },
+    { en:"Pair",            vi:"đôi",      emoji:"👫" },
+    { en:"Half",            vi:"một nửa",  emoji:"½" }
+  ],
+    hard:   [
+    { en:"I have ten fingers on my hands",    vi:"Tôi có mười ngón tay",               emoji:"🔟" },
+    { en:"There are seven days in a week",    vi:"Có bảy ngày trong một tuần",         emoji:"📅" },
+    { en:"I count to one hundred at school",  vi:"Tôi đếm đến một trăm ở trường",      emoji:"💯" },
+    { en:"Two plus two equals four",          vi:"Hai cộng hai bằng bốn",              emoji:"➕" },
+    { en:"I am the first in line",            vi:"Tôi đứng đầu hàng",                  emoji:"🥇" }
+  ],
+  },
+
+  colors: {
+    easy:   [
     { en: 'Red',          vi: 'đỏ',            emoji: '🔴' },
     { en: 'Blue',         vi: 'xanh dương',    emoji: '🔵' },
     { en: 'Green',        vi: 'xanh lá',       emoji: '🟢' },
@@ -1135,9 +1277,29 @@ const VOCAB = {
     { en: 'Black',        vi: 'đen',           emoji: '⚫' },
     { en: 'Orange',       vi: 'cam',           emoji: '🟠' },
     { en: 'Pink',         vi: 'hồng',          emoji: '🩷' },
-    { en: 'Purple',       vi: 'tím',           emoji: '🟣' },
+    { en: 'Purple',       vi: 'tím',           emoji: '🟣' }
   ],
-  everyday: [
+    medium: [
+    { en:"Brown",    vi:"màu nâu",  emoji:"🟤" },
+    { en:"Gray",     vi:"màu xám",  emoji:"⬜" },
+    { en:"Gold",     vi:"màu vàng kim", emoji:"🥇" },
+    { en:"Silver",   vi:"màu bạc",  emoji:"🥈" },
+    { en:"Dark",     vi:"màu tối",  emoji:"🌑" },
+    { en:"Light",    vi:"màu sáng", emoji:"☀️" },
+    { en:"Rainbow",  vi:"cầu vồng", emoji:"🌈" },
+    { en:"Beige",    vi:"màu be",   emoji:"🟫" }
+  ],
+    hard:   [
+    { en:"The sky is blue today",             vi:"Bầu trời hôm nay màu xanh",          emoji:"🔵" },
+    { en:"My favorite color is green",        vi:"Màu yêu thích của tôi là màu xanh lá",emoji:"🟢" },
+    { en:"The rainbow has seven colors",      vi:"Cầu vồng có bảy màu",                emoji:"🌈" },
+    { en:"Apples are red and bananas are yellow",vi:"Táo màu đỏ và chuối màu vàng",    emoji:"🍎" },
+    { en:"I paint with many colors in art class",vi:"Tôi vẽ bằng nhiều màu trong lớp mỹ thuật",emoji:"🎨" }
+  ],
+  },
+
+  everyday: {
+    easy:   [
     { en: 'Hello',        vi: 'xin chào',      emoji: '👋' },
     { en: 'Thank you',    vi: 'cảm ơn',        emoji: '🙏' },
     { en: 'Yes',          vi: 'vâng / có',     emoji: '✅' },
@@ -1150,9 +1312,29 @@ const VOCAB = {
     { en: 'Play',         vi: 'chơi',          emoji: '🎮' },
     { en: 'Roomba',       vi: 'rô-bốt lau nhà',emoji:'🤖' },
     { en: 'Train',        vi: 'tàu hỏa',       emoji: '🚂' },
-    { en: 'Please',       vi: 'xin',           emoji: '🤝' },
+    { en: 'Please',       vi: 'xin',           emoji: '🤝' }
   ],
-  body: [
+    medium: [
+    { en:"Cup",        vi:"cốc",       emoji:"🥤" },
+    { en:"Plate",      vi:"đĩa",       emoji:"🍽️" },
+    { en:"Spoon",      vi:"thìa",      emoji:"🥄" },
+    { en:"Fork",       vi:"dĩa",       emoji:"🍴" },
+    { en:"Knife",      vi:"dao",       emoji:"🔪" },
+    { en:"Chair",      vi:"ghế",       emoji:"🪑" },
+    { en:"Table",      vi:"bàn",       emoji:"🪑" },
+    { en:"Clock",      vi:"đồng hồ",   emoji:"⏰" }
+  ],
+    hard:   [
+    { en:"Please pass me the cup of water",   vi:"Làm ơn đưa cho tôi cốc nước",        emoji:"🥤" },
+    { en:"I set the table for dinner",        vi:"Tôi dọn bàn cho bữa tối",            emoji:"🍽️" },
+    { en:"The clock on the wall is ticking",  vi:"Đồng hồ trên tường đang chạy",       emoji:"⏰" },
+    { en:"I brush my teeth every morning",    vi:"Tôi đánh răng mỗi sáng",             emoji:"🪥" },
+    { en:"We sit on chairs around the table", vi:"Chúng tôi ngồi ghế quanh bàn",       emoji:"🪑" }
+  ],
+  },
+
+  body: {
+    easy:   [
     { en: 'Head',    vi: 'đầu',     emoji: '🗣️' },
     { en: 'Eyes',    vi: 'mắt',     emoji: '👀' },
     { en: 'Nose',    vi: 'mũi',     emoji: '👃' },
@@ -1162,9 +1344,29 @@ const VOCAB = {
     { en: 'Ears',    vi: 'tai',     emoji: '👂' },
     { en: 'Stomach', vi: 'bụng',    emoji: '🫃' },
     { en: 'Back',    vi: 'lưng',    emoji: '🔙' },
-    { en: 'Hair',    vi: 'tóc',     emoji: '💇' },
+    { en: 'Hair',    vi: 'tóc',     emoji: '💇' }
   ],
-  actions: [
+    medium: [
+    { en:"Cheek",        vi:"má",         emoji:"🫠" },
+    { en:"Elbow",        vi:"khuỷu tay",  emoji:"💪" },
+    { en:"Knee",         vi:"đầu gối",    emoji:"🦵" },
+    { en:"Shoulder",     vi:"vai",        emoji:"🤷" },
+    { en:"Neck",         vi:"cổ",         emoji:"🧣" },
+    { en:"Wrist",        vi:"cổ tay",     emoji:"⌚" },
+    { en:"Ankle",        vi:"mắt cá chân",emoji:"🦶" },
+    { en:"Forehead",     vi:"trán",       emoji:"🤔" }
+  ],
+    hard:   [
+    { en:"I can touch my toes with my hands", vi:"Tôi có thể sờ ngón chân bằng tay",   emoji:"🤸" },
+    { en:"Close your eyes and go to sleep",   vi:"Nhắm mắt lại và đi ngủ",             emoji:"😴" },
+    { en:"I use my mouth to speak Vietnamese",vi:"Tôi dùng miệng để nói tiếng Việt",   emoji:"👄" },
+    { en:"My arms are strong from climbing",  vi:"Tay tôi khỏe vì leo trèo",           emoji:"💪" },
+    { en:"I wear a hat on my head",           vi:"Tôi đội mũ trên đầu",                emoji:"🧢" }
+  ],
+  },
+
+  actions: {
+    easy:   [
     { en: 'Run',    vi: 'chạy',      emoji: '🏃' },
     { en: 'Jump',   vi: 'nhảy',      emoji: '🦘' },
     { en: 'Swim',   vi: 'bơi',       emoji: '🏊' },
@@ -1174,9 +1376,29 @@ const VOCAB = {
     { en: 'Dance',  vi: 'nhảy múa',  emoji: '💃' },
     { en: 'Throw',  vi: 'ném',       emoji: '🤾' },
     { en: 'Kick',   vi: 'đá',        emoji: '⚽' },
-    { en: 'Hug',    vi: 'ôm',        emoji: '🤗' },
+    { en: 'Hug',    vi: 'ôm',        emoji: '🤗' }
   ],
-  places: [
+    medium: [
+    { en:"Sing",        vi:"hát",        emoji:"🎤" },
+    { en:"Dance",       vi:"nhảy múa",   emoji:"💃" },
+    { en:"Cook",        vi:"nấu ăn",     emoji:"🍳" },
+    { en:"Clean",       vi:"lau dọn",    emoji:"🧹" },
+    { en:"Throw",       vi:"ném",        emoji:"🤾" },
+    { en:"Catch",       vi:"bắt",        emoji:"🧤" },
+    { en:"Push",        vi:"đẩy",        emoji:"🏋️" },
+    { en:"Pull",        vi:"kéo",        emoji:"🚂" }
+  ],
+    hard:   [
+    { en:"I sing a song in Vietnamese class", vi:"Tôi hát một bài trong lớp tiếng Việt",emoji:"🎤" },
+    { en:"We dance together at the party",    vi:"Chúng tôi nhảy múa cùng nhau ở bữa tiệc",emoji:"💃" },
+    { en:"I help mom cook dinner every day",  vi:"Tôi giúp mẹ nấu bữa tối mỗi ngày",   emoji:"🍳" },
+    { en:"Please clean your room after playing",vi:"Làm ơn dọn phòng sau khi chơi",    emoji:"🧹" },
+    { en:"I can throw the ball very far",     vi:"Tôi có thể ném bóng rất xa",         emoji:"🤾" }
+  ],
+  },
+
+  places: {
+    easy:   [
     { en: 'School',        vi: 'trường học',  emoji: '🏫' },
     { en: 'Home',          vi: 'nhà',         emoji: '🏠' },
     { en: 'Park',          vi: 'công viên',   emoji: '🌳' },
@@ -1191,9 +1413,29 @@ const VOCAB = {
     { en: 'Classroom',     vi: 'lớp học',     emoji: '🏫' },
     { en: 'Garden',        vi: 'vườn',        emoji: '🌻' },
     { en: 'Pool',          vi: 'hồ bơi',      emoji: '🏊' },
-    { en: 'Road',          vi: 'đường',       emoji: '🛣️' },
+    { en: 'Road',          vi: 'đường',       emoji: '🛣️' }
   ],
-  school: [
+    medium: [
+    { en:"Airport",      vi:"sân bay",     emoji:"✈️" },
+    { en:"Museum",       vi:"bảo tàng",   emoji:"🏛️" },
+    { en:"Gym",          vi:"phòng tập",  emoji:"🏋️" },
+    { en:"Church",       vi:"nhà thờ",    emoji:"⛪" },
+    { en:"Market",       vi:"chợ",        emoji:"🏪" },
+    { en:"Parking lot",  vi:"bãi đỗ xe",  emoji:"🅿️" },
+    { en:"Factory",      vi:"nhà máy",    emoji:"🏭" },
+    { en:"Bridge",       vi:"cây cầu",    emoji:"🌉" }
+  ],
+    hard:   [
+    { en:"We fly from the airport to Hanoi",  vi:"Chúng tôi bay từ sân bay đến Hà Nội", emoji:"✈️" },
+    { en:"The museum has many old artifacts", vi:"Bảo tàng có nhiều đồ cổ",             emoji:"🏛️" },
+    { en:"I borrow books from the library",   vi:"Tôi mượn sách ở thư viện",            emoji:"📚" },
+    { en:"We buy vegetables at the market",   vi:"Chúng tôi mua rau ở chợ",            emoji:"🏪" },
+    { en:"Dad parks the car in the parking lot",vi:"Bố đỗ xe ở bãi đỗ xe",              emoji:"🅿️" }
+  ],
+  },
+
+  school: {
+    easy:   [
     { en: 'Book',          vi: 'sách',          emoji: '📖' },
     { en: 'Pencil',        vi: 'bút chì',       emoji: '✏️' },
     { en: 'Pen',           vi: 'bút mực',       emoji: '🖊️' },
@@ -1208,9 +1450,29 @@ const VOCAB = {
     { en: 'Glue',          vi: 'keo',           emoji: '🔧' },
     { en: 'Paper',         vi: 'giấy',          emoji: '📄' },
     { en: 'Crayon',        vi: 'bút màu',       emoji: '🖍️' },
-    { en: 'Lunch box',     vi: 'hộp cơm',       emoji: '🍱' },
+    { en: 'Lunch box',     vi: 'hộp cơm',       emoji: '🍱' }
   ],
-  nature: [
+    medium: [
+    { en:"Desk",         vi:"bàn học",    emoji:"🪑" },
+    { en:"Chalkboard",   vi:"bảng đen",   emoji:"🖥️" },
+    { en:"Ruler",        vi:"thước kẻ",   emoji:"📏" },
+    { en:"Notebook",     vi:"vở",         emoji:"📓" },
+    { en:"Eraser",       vi:"cục tẩy",    emoji:"🧽" },
+    { en:"Glue",         vi:"keo",        emoji:"🫙" },
+    { en:"Pencil sharpener",vi:"gọt bút chì",emoji:"✏️" },
+    { en:"Calculator",   vi:"máy tính",   emoji:"🔢" }
+  ],
+    hard:   [
+    { en:"I sit at my desk in the classroom", vi:"Tôi ngồi ở bàn học trong lớp",        emoji:"🪑" },
+    { en:"The teacher writes on the chalkboard",vi:"Cô giáo viết trên bảng đen",       emoji:"🖥️" },
+    { en:"I put my books in my backpack",     vi:"Tôi bỏ sách vào ba lô",              emoji:"🎒" },
+    { en:"We use a ruler to draw straight lines",vi:"Chúng tôi dùng thước kẻ để vẽ đường thẳng",emoji:"📏" },
+    { en:"I write spelling words in my notebook",vi:"Tôi viết từ chính tả vào vở",     emoji:"📓" }
+  ],
+  },
+
+  nature: {
+    easy:   [
     { en: 'Sun',           vi: 'mặt trời',      emoji: '☀️' },
     { en: 'Moon',          vi: 'mặt trăng',     emoji: '🌙' },
     { en: 'Rain',          vi: 'mưa',           emoji: '🌧️' },
@@ -1225,9 +1487,29 @@ const VOCAB = {
     { en: 'Star',          vi: 'ngôi sao',      emoji: '⭐' },
     { en: 'Rock',          vi: 'đá',            emoji: '🪨' },
     { en: 'Leaf',          vi: 'lá cây',        emoji: '🍃' },
-    { en: 'Butterfly',     vi: 'con bướm',      emoji: '🦋' },
+    { en: 'Butterfly',     vi: 'con bướm',      emoji: '🦋' }
   ],
-  feelings: [
+    medium: [
+    { en:"River",        vi:"con sông",   emoji:"🏞️" },
+    { en:"Mountain",     vi:"núi",        emoji:"⛰️" },
+    { en:"Lake",         vi:"cái hồ",     emoji:"🏞️" },
+    { en:"Forest",       vi:"rừng",       emoji:"🌲" },
+    { en:"Ocean",        vi:"đại dương",  emoji:"🌊" },
+    { en:"Volcano",      vi:"núi lửa",    emoji:"🌋" },
+    { en:"Desert",       vi:"sa mạc",     emoji:"🏜️" },
+    { en:"Island",       vi:"hòn đảo",    emoji:"🏝️" }
+  ],
+    hard:   [
+    { en:"We swim in the river on hot days",  vi:"Chúng tôi bơi ở sông vào ngày nóng", emoji:"🏞️" },
+    { en:"The mountain is covered with snow", vi:"Núi phủ đầy tuyết trắng",             emoji:"⛰️" },
+    { en:"Fish live in the lake and the ocean",vi:"Cá sống ở hồ và đại dương",          emoji:"🌊" },
+    { en:"We walk through the forest to find mushrooms",vi:"Chúng tôi đi qua rừng để tìm nấm",emoji:"🌲" },
+    { en:"The volcano erupted many years ago", vi:"Núi lửa phun trào nhiều năm trước", emoji:"🌋" }
+  ],
+  },
+
+  feelings: {
+    easy:   [
     { en: 'Happy',         vi: 'vui',           emoji: '😄' },
     { en: 'Sad',           vi: 'buồn',          emoji: '😢' },
     { en: 'Angry',         vi: 'tức',           emoji: '😠' },
@@ -1237,10 +1519,27 @@ const VOCAB = {
     { en: 'Excited',       vi: 'hào hứng',      emoji: '🤩' },
     { en: 'Bored',         vi: 'chán',          emoji: '😑' },
     { en: 'Surprised',     vi: 'ngạc nhiên',    emoji: '😲' },
-    { en: 'Sick',          vi: 'bệnh',          emoji: '🤒' },
+    { en: 'Sick',          vi: 'bệnh',          emoji: '🤒' }
   ],
+    medium: [
+    { en:"Nervous",     vi:"lo lắng",    emoji:"😰" },
+    { en:"Bored",       vi:"chán",       emoji:"😑" },
+    { en:"Surprised",   vi:"ngạc nhiên", emoji:"😲" },
+    { en:"Proud",       vi:"tự hào",     emoji:"😌" },
+    { en:"Lonely",      vi:"cô đơn",     emoji:"😔" },
+    { en:"Calm",        vi:"bình tĩnh",  emoji:"😌" },
+    { en:"Confused",    vi:"bối rối",    emoji:"😕" },
+    { en:"Shy",         vi:"ngại ngùng", emoji:"☺️" }
+  ],
+    hard:   [
+    { en:"I feel happy when I play with friends",vi:"Tôi cảm thấy vui khi chơi với bạn",emoji:"😊" },
+    { en:"I am scared of the dark at night",   vi:"Tôi sợ bóng tối vào ban đêm",       emoji:"😨" },
+    { en:"Mom is proud when I do good work",   vi:"Mẹ tự hào khi tôi làm tốt",         emoji:"😌" },
+    { en:"I feel lonely when no one is home",  vi:"Tôi thấy cô đơn khi không có ai ở nhà",emoji:"😔" },
+    { en:"The magic trick made me surprised",  vi:"Màn ảo thuật làm tôi ngạc nhiên",   emoji:"😲" }
+  ],
+  },
 };
-
 const CAT_LABELS = {
   animals:  '🐾 Animals',
   family:   '👨‍👩‍👧 Family',
@@ -1256,7 +1555,7 @@ const CAT_LABELS = {
   feelings: '😄 Feelings',
 };
 
-const FILL_QUESTIONS = [
+const FILL_QUESTIONS_EASY = [
   { q:'Con ___ sủa.',            en:'The ___ barks.',             ans:'chó',       wrong:['mèo','cá','gà'] },
   { q:'Mẹ nấu ___.',             en:'Mom cooks ___.',              ans:'cơm',       wrong:['nước','táo','sữa'] },
   { q:'Con ___ bay.',            en:'The ___ flies.',              ans:'chim',      wrong:['heo','ếch','cá'] },
@@ -1316,6 +1615,42 @@ const FILL_QUESTIONS = [
   { q:'Cây ___ màu xanh lá.',    en:'The ___ is green.',           ans:'cỏ',        wrong:['hoa','đá','mưa'] },
 ];
 
+const FILL_QUESTIONS_MEDIUM = [
+  { q:'Con ___ sống trong rừng và kêu gầm.',  en:'The ___ lives in the forest and roars.',  ans:'hổ',       wrong:['voi','khỉ','bò'] },
+  { q:'Con ___ có vòi dài.',                  en:'The ___ has a long trunk.',               ans:'voi',      wrong:['hổ','gấu','ngựa'] },
+  { q:'Tôi ăn ___ tráng miệng.',              en:'I eat ___ for dessert.',                  ans:'kem',      wrong:['súp','cơm','mì'] },
+  { q:'___ có nhiều màu đẹp trên bầu trời.',  en:'A ___ has many beautiful colors in the sky.', ans:'cầu vồng', wrong:['tuyết','mưa','gió'] },
+  { q:'Mười cộng mười bằng ___.',             en:'Ten plus ten equals ___.',                ans:'hai mươi', wrong:['mười','ba mươi','một trăm'] },
+  { q:'Con ___ leo trèo rất giỏi.',           en:'The ___ climbs very well.',               ans:'khỉ',      wrong:['cá','vịt','bò'] },
+  { q:'Tôi ___ về nhà sau giờ học.',          en:'I ___ to go home after school.',          ans:'muốn',     wrong:['chơi','hát','bơi'] },
+  { q:'Màu của đất là ___.',                  en:'The color of dirt is ___.',               ans:'nâu',      wrong:['đỏ','xanh lá','vàng'] },
+  { q:'Khi lo lắng, tôi cảm thấy ___.',       en:'When worried, I feel ___.',               ans:'hồi hộp',  wrong:['vui','buồn','tức'] },
+  { q:'Mẹ nấu ___ nóng cho bữa tối.',         en:"Mom makes hot ___ for dinner.",           ans:'súp',      wrong:['kem','bánh ngọt','nước'] },
+  { q:'Con ___ phi nước đại trên đồng.',      en:'The ___ gallops across the field.',       ans:'ngựa',     wrong:['bò','khỉ','gấu'] },
+  { q:'Trời ___ rơi trắng xóa.',              en:'___ falls white everywhere.',             ans:'tuyết',    wrong:['mưa','gió','sương'] },
+  { q:'Tôi viết bài vào ___.',                en:'I write my work in a ___.',               ans:'vở',       wrong:['kéo','thước','keo'] },
+  { q:'Tôi cảm thấy ___ khi được khen.',      en:'I feel ___ when I am praised.',           ans:'tự hào',   wrong:['buồn','sợ','tức'] },
+  { q:'Gia đình tôi có ___ người.',           en:'My family has ___ people.',               ans:'năm',      wrong:['ba','mười','hai'] },
+];
+
+const FILL_QUESTIONS_HARD = [
+  { q:'Con chó chạy ___ trong sân.',          en:'The dog runs ___ in the yard.',           ans:'nhanh',    wrong:['chậm','buồn','ngủ'] },
+  { q:'Tôi yêu ___ của tôi rất nhiều.',       en:'I love my ___ very much.',                ans:'mẹ',       wrong:['cơm','sách','bút'] },
+  { q:'Bầu trời màu xanh ___.',               en:'The sky is sky-___ (blue).',              ans:'dương',    wrong:['lá','nhạt','đậm'] },
+  { q:'Chúng tôi ăn tối ___ nhau.',           en:'We eat dinner ___ each other.',           ans:'cùng',     wrong:['trên','dưới','sau'] },
+  { q:'Mặt trời ___ mỗi buổi sáng.',          en:'The sun ___ every morning.',              ans:'mọc',      wrong:['ăn','chơi','ngủ'] },
+  { q:'Tôi chạy đến ___ mỗi sáng.',           en:'I run to ___ every morning.',             ans:'trường',   wrong:['nhà hàng','bãi biển','chợ'] },
+  { q:'Tôi đánh ___ mỗi ngày.',               en:'I brush my ___ every day.',               ans:'răng',     wrong:['bạn','cơm','sách'] },
+  { q:'Con bướm bay từ hoa này sang hoa ___.',en:'The butterfly flies from flower to flower.', ans:'khác',  wrong:['đây','tốt','cũ'] },
+  { q:'Ngôi sao sáng vào ban ___.',            en:'Stars shine at ___.',                     ans:'đêm',      wrong:['ngày','sáng','trưa'] },
+  { q:'Tôi cảm thấy ___ khi học giỏi.',       en:'I feel proud when I do well in school.',  ans:'tự hào',   wrong:['buồn','sợ','hồi hộp'] },
+  { q:'Mưa rơi từ trên ___ xuống.',            en:'Rain falls down from ___.',               ans:'mây',      wrong:['đất','cây','núi'] },
+  { q:'Tôi vui khi chơi với ___ bè.',          en:'I am happy when playing with friends.',  ans:'bạn',      wrong:['cơm','sách','tóc'] },
+  { q:'Gió ___ những lá cây rơi xuống.',       en:'The wind ___ the leaves to fall.',       ans:'thổi',     wrong:['ăn','mọc','nhảy'] },
+  { q:'Bố ___ tôi đến trường mỗi ngày.',       en:'Dad ___ me to school every day.',        ans:'chở',      wrong:['ăn','ngủ','đọc'] },
+  { q:'Tôi đi học ___ ngày.',                  en:'I go to school every ___.',              ans:'mỗi',      wrong:['ba','mười','hai'] },
+];
+
 const ROOMBA_COMMANDS = [
   { vi:'Đứng lên!',     en:'Stand up!',       action:'standup' },
   { vi:'Ngồi xuống!',   en:'Sit down!',       action:'sitdown' },
@@ -1357,6 +1692,51 @@ const CHEERS = [
   '🏆 Số một!\nNumber one!',
   '🎊 Chuẩn luôn!\nSpot on!',
 ];
+
+/* ============================================================
+   LEVEL
+   ============================================================ */
+let currentLevel = localStorage.getItem('viet-level') || 'easy';
+
+function loadLevel() { return localStorage.getItem('viet-level') || 'easy'; }
+function saveLevel(level) {
+  localStorage.setItem('viet-level', level);
+  setLevel(level);
+}
+function updateGameLevel() {
+  const sel = document.getElementById('level-select');
+  if (sel) saveLevel(sel.value);
+}
+
+function setLevel(level) {
+  currentLevel = level;
+  const sel = document.getElementById('level-select');
+  if (sel) sel.value = level;
+  document.querySelectorAll('.level-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.level === level);
+  });
+  if (document.getElementById('screen-flashcards').classList.contains('active')) {
+    fc.idx = 0;
+    fc.flipped = false;
+    renderCard();
+  }
+  if (document.getElementById('screen-fitb').classList.contains('active')) {
+    startFillBlank();
+  }
+}
+
+function getWords(cat) {
+  return VOCAB[cat][getLevel()] || VOCAB[cat].easy;
+}
+function getAllWords() {
+  return Object.keys(VOCAB).flatMap(cat => getWords(cat));
+}
+function getFillQuestions() {
+  const lv = getLevel();
+  if (lv === 'hard')   return FILL_QUESTIONS_HARD;
+  if (lv === 'medium') return FILL_QUESTIONS_MEDIUM;
+  return FILL_QUESTIONS_EASY;
+}
 
 /* ============================================================
    SPEECH SYNTHESIS - PRONUNCIATION
@@ -1443,7 +1823,7 @@ function speak(text) {
 
 // Speak current flashcard
 function speakCurrentCard() {
-  const items = VOCAB[fc.cat];
+  const items = getWords(fc.cat);
   if (items && items[fc.idx]) {
     speak(items[fc.idx].vi);
   }
@@ -1507,12 +1887,12 @@ function playVietnamTone(toneIndex) {
    PROGRESS / STORAGE
    ============================================================ */
 function getProgress() {
-  try { return JSON.parse(localStorage.getItem('viet_mo_2') || '{}'); } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem('viet_mo') || '{}'); } catch(e) { return {}; }
 }
 function addStar(key) {
   const p = getProgress();
   p[key] = (p[key] || 0) + 1;
-  localStorage.setItem('viet_mo_2', JSON.stringify(p));
+  localStorage.setItem('viet_mo', JSON.stringify(p));
   updateMenuStars();
 }
 function totalStars() {
@@ -1579,15 +1959,16 @@ function buildCatTabs() {
 }
 
 function renderCard() {
-  const w = VOCAB[fc.cat][fc.idx];
+  const words = getWords(fc.cat);
+  if (fc.idx >= words.length) fc.idx = 0;
+  const w = words[fc.idx];
   fc.flipped = false;
   document.getElementById('flashcard').classList.remove('flipped');
   document.getElementById('fc-emoji').textContent  = w.emoji;
   document.getElementById('fc-emoji-b').textContent= w.emoji;
   document.getElementById('fc-en').textContent     = w.en;
   document.getElementById('fc-vi').textContent     = w.vi;
-  const len = VOCAB[fc.cat].length;
-  document.getElementById('fc-counter').textContent = `${fc.idx + 1} / ${len}`;
+  document.getElementById('fc-counter').textContent = `${fc.idx + 1} / ${words.length}`;
 }
 
 function flipCard() {
@@ -1598,11 +1979,13 @@ function flipCard() {
 }
 
 function prevCard() {
-  fc.idx = (fc.idx - 1 + VOCAB[fc.cat].length) % VOCAB[fc.cat].length;
+  const len = getWords(fc.cat).length;
+  fc.idx = (fc.idx - 1 + len) % len;
   renderCard();
 }
 function nextCard() {
-  fc.idx = (fc.idx + 1) % VOCAB[fc.cat].length;
+  const len = getWords(fc.cat).length;
+  fc.idx = (fc.idx + 1) % len;
   renderCard();
 }
 
@@ -1615,7 +1998,7 @@ function startWordMatch() {
   showScreen('screen-match');
   document.getElementById('match-next').style.display = 'none';
 
-  const all = Object.values(VOCAB).flat();
+  const all = getAllWords();
   ms.pairs = pick(all, 6);
   ms.sel   = null;
   ms.matched = 0;
@@ -1698,7 +2081,7 @@ let fb = { qs: [], cur: 0, score: 0, done: false };
 
 function startFillBlank() {
   showScreen('screen-fitb');
-  fb.qs    = pick(FILL_QUESTIONS, 10);
+  fb.qs    = pick(getFillQuestions(), 10);
   fb.cur   = 0;
   fb.score = 0;
   fb.done  = false;
@@ -1882,6 +2265,15 @@ function updateRoombaScore() {
    INIT
    ============================================================ */
 updateMenuStars();
+(function() {
+  const lv = loadLevel();
+  const sel = document.getElementById('level-select');
+  if (sel) sel.value = lv;
+  currentLevel = lv;
+  document.querySelectorAll('.level-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.level === lv);
+  });
+})();
 </script>
 </body>
 </html>
